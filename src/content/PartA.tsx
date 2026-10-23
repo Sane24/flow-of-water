@@ -5,7 +5,7 @@ import { MarginPlate, Params, Section, SubHead } from '../components/Layout'
 import { EditTimeline } from '../components/EditTimeline'
 import { AnagramViewer } from '../components/AnagramViewer'
 import { HybridViewer } from '../components/HybridViewer'
-import { Butterfly, Cat, Frog, Lancet } from '../components/Motifs'
+import { Butterfly, Cat, Fern, Frog, Lancet } from '../components/Motifs'
 import { FrameScrubber, InterpolationPlayground } from '../components/Interactive'
 import { Caustics, Fireflies } from '../components/Ambient'
 import { NightShore, Pond, WaveEdge } from '../components/Scenes'
@@ -13,6 +13,13 @@ import { Sketchbook } from '../components/Sketchbook'
 import { asset } from '../data/figures'
 
 const seeds = [180, 181, 182, 183, 184]
+
+const CREATIVE = [
+  ['a-3-1', '3.1', 'Image-to-image editing'],
+  ['a-3-2', '3.2', 'Text-guided editing'],
+  ['a-3-3', '3.3', 'Visual anagrams'],
+  ['a-3-4', '3.4', 'Hybrid images'],
+] as const
 
 export function PartA() {
   return (
@@ -257,10 +264,31 @@ export function PartA() {
       </Section>
 
       {/* ------------------------------------------------------------ creative applications */}
-      <header id="creative" className="part-break flow" data-toc>
-        <p className="eyebrow">Part A · section 3</p>
-        <h2 className="part-break__title">Creative applications</h2>
-        <p>Same sampler, used to edit images and make illusions.</p>
+      <header id="creative" className="part-break" data-toc data-ambient="forest">
+        <div className="part-break__inner">
+          <span className="part-break__numeral" aria-hidden="true">
+            3
+          </span>
+          <div className="part-break__text">
+            <p className="part-break__part">Part A · section 3</p>
+            <h2 className="part-break__title">Creative applications</h2>
+            <p className="part-break__intro">
+              Sections 1 and 2 were about understanding the model. Here the same sampler gets used to edit images
+              and make illusions.
+            </p>
+            <ol className="part-break__list">
+              {CREATIVE.map(([id, num, label]) => (
+                <li key={id}>
+                  <a href={`#${id}`}>
+                    <span>{num}</span>
+                    {label}
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </div>
+          <Fern className="part-break__fern" leaves={11} />
+        </div>
       </header>
 
       {/* ------------------------------------------------------------ 3.1 */}

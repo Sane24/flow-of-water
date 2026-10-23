@@ -4,6 +4,7 @@ interface Item {
   id: string
   label: string
   num?: string
+  accent?: boolean
   children?: Item[]
 }
 
@@ -25,6 +26,7 @@ export const TOC: Item[] = [
   {
     id: 'creative',
     label: 'Creative applications',
+    accent: true,
     children: [
       { id: 'a-3-1', num: '3.1', label: 'Image-to-image editing' },
       { id: 'a-3-2', num: '3.2', label: 'Text-guided editing' },
@@ -90,7 +92,10 @@ function List({ active, onNavigate }: { active: string; onNavigate?: () => void 
   return (
     <ol className="toc__list">
       {TOC.map((item) => (
-        <li key={item.id} className={`toc__item ${openPart === item.id ? 'is-open' : ''}`}>
+        <li
+          key={item.id}
+          className={`toc__item ${item.accent ? 'toc__item--accent' : ''} ${openPart === item.id ? 'is-open' : ''}`}
+        >
           <a
             href={`#${item.id}`}
             className={active === item.id ? 'is-active' : ''}

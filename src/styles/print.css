@@ -306,6 +306,32 @@
     overflow: visible;
   }
 
+  .part-break {
+    margin: 10pt 0 6pt;
+    padding: 6pt 0 8pt;
+    background: none !important;
+    border-bottom: 0.75pt solid var(--moss-2);
+    break-after: avoid;
+    overflow: visible;
+  }
+
+  .part-break__inner {
+    max-width: none;
+  }
+
+  .part-break__numeral {
+    font-size: 48pt;
+  }
+
+  .part-break__title {
+    font-size: 22pt;
+  }
+
+  .part-break__list,
+  .part-break__fern {
+    display: none;
+  }
+
   .opener__inner,
   .opener--falls .opener__inner {
     display: grid;
