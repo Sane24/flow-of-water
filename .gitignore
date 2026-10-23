@@ -1,0 +1,16 @@
+node_modules/
+dist/
+exports/
+.DS_Store
+*.log
+
+# Model checkpoints and raw run folders stay local
+*.pt
+/CS180_PartA_Site_Images/
+
+# Original notebooks and raw outputs live at the top level; the site uses
+# optimized copies in public/images and cleaned notebooks in notebooks/
+/*.ipynb
+/*.png
+/*.jpg
+/*.jpeg
