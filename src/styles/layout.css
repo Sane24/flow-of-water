@@ -738,12 +738,16 @@
   color: #e4a58f;
 }
 
+.opener__stage {
+  position: relative;
+}
+
 .falls {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 46%;
+  top: calc(-1 * clamp(3rem, 7vw, 5.5rem));
+  bottom: -1.5rem;
+  left: calc(-1 * var(--gutter));
+  width: calc(44% + var(--gutter));
 }
 
 .falls__canvas {

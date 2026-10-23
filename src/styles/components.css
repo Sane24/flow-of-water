@@ -1889,12 +1889,12 @@ img[data-pixelated] {
 }
 
 /* ripples around the hero porthole */
-.ripples circle {
-  fill: none;
-  stroke: rgba(207, 226, 220, 0.45);
-  stroke-width: 0.5;
-  transform-box: view-box;
-  transform-origin: 100px 100px;
+.ripples i {
+  position: absolute;
+  inset: 19%;
+  border-radius: 50%;
+  border: 1px solid rgba(207, 226, 220, 0.4);
+  will-change: transform, opacity;
   animation: ripple 7.8s linear infinite;
 }
 

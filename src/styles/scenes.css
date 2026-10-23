@@ -1,0 +1,1034 @@
+/* ================================================================ ambient layer */
+.hero {
+  z-index: 2;
+}
+
+.page {
+  position: relative;
+  z-index: 1;
+}
+
+.ambient {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.flyers {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.flyer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 36px;
+  opacity: 0;
+  transition: opacity 0.8s;
+  will-change: transform;
+  color: var(--ink);
+}
+
+.flyer .motif--butterfly .flap {
+  animation: flutter 0.26s ease-in-out infinite alternate;
+}
+
+@keyframes flutter {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0.3);
+  }
+}
+
+.flyer--a {
+  --wing: rgba(199, 118, 96, 0.55);
+  --wing-low: rgba(232, 196, 106, 0.5);
+}
+
+.flyer--b {
+  width: 30px;
+  --wing: rgba(167, 201, 192, 0.75);
+  --wing-low: rgba(42, 103, 112, 0.35);
+}
+
+/* ================================================================ caustic light */
+.caustics {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.4;
+  -webkit-mask-image:
+    linear-gradient(90deg, #000, rgba(0, 0, 0, 0.25) 28%, rgba(0, 0, 0, 0.07) 50%, rgba(0, 0, 0, 0.25) 72%, #000),
+    linear-gradient(180deg, transparent, #000 15%, #000 80%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(90deg, #000, rgba(0, 0, 0, 0.25) 28%, rgba(0, 0, 0, 0.07) 50%, rgba(0, 0, 0, 0.25) 72%, #000),
+    linear-gradient(180deg, transparent, #000 15%, #000 80%, transparent);
+  mask-composite: intersect;
+}
+
+/* absolutely placed decorations span the whole section, not the text column */
+.flow > .caustics,
+.flow > .fireflies,
+.flow > .wave-edge,
+.flow > .night-moon {
+  grid-column: auto;
+  grid-row: auto;
+}
+
+.caustics span {
+  position: absolute;
+  inset: -30%;
+  background-image: url('../assets/caustic-sea-a.webp');
+  background-size: 560px 560px;
+  will-change: transform;
+  animation: caustic-a 32s ease-in-out infinite alternate;
+}
+
+.caustics span + span {
+  background-image: url('../assets/caustic-sea-b.webp');
+  background-size: 780px 780px;
+  opacity: 0.8;
+  animation: caustic-b 44s ease-in-out infinite alternate;
+}
+
+@keyframes caustic-a {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-7%, 5%, 0);
+  }
+}
+
+@keyframes caustic-b {
+  from {
+    transform: translate3d(-4%, 3%, 0) scale(1.05);
+  }
+  to {
+    transform: translate3d(5%, -4%, 0) scale(1.05);
+  }
+}
+
+.caustics--glass {
+  opacity: 0.5;
+}
+
+.caustics--glass span {
+  background-image: url('../assets/caustic-glass-a.webp');
+}
+
+.caustics--glass span + span {
+  background-image: url('../assets/caustic-glass-b.webp');
+}
+
+.caustics--foam {
+  opacity: 0.45;
+}
+
+.intro {
+  isolation: isolate;
+}
+
+.opener--ocean {
+  isolation: isolate;
+}
+
+/* ================================================================ hero: mist and a moving shore */
+.hero__mist {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 22%;
+  height: 26%;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.hero__mist span {
+  position: absolute;
+  inset: 0 -40%;
+  background:
+    radial-gradient(ellipse 22% 45% at 18% 55%, rgba(207, 226, 220, 0.13), transparent 70%),
+    radial-gradient(ellipse 18% 38% at 52% 40%, rgba(207, 226, 220, 0.1), transparent 70%),
+    radial-gradient(ellipse 25% 50% at 82% 60%, rgba(207, 226, 220, 0.12), transparent 70%);
+  animation: mist 46s ease-in-out infinite alternate;
+}
+
+.hero__mist span + span {
+  animation-duration: 64s;
+  animation-direction: alternate-reverse;
+  opacity: 0.8;
+  top: 30%;
+}
+
+@keyframes mist {
+  from {
+    transform: translate3d(-8%, 0, 0);
+  }
+  to {
+    transform: translate3d(8%, 0, 0);
+  }
+}
+
+.hero__shore {
+  overflow: hidden;
+  z-index: 1;
+}
+
+.shore,
+.wave-edge {
+  max-width: none;
+}
+
+.shore {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 200%;
+  height: 100%;
+  animation: slide-half 30s linear infinite;
+}
+
+.shore--paper {
+  animation-duration: 46s;
+  animation-direction: reverse;
+}
+
+.shore--foam path {
+  fill: rgba(237, 244, 239, 0.32);
+}
+
+.shore--paper path {
+  fill: var(--paper);
+}
+
+@keyframes slide-half {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.hero__butterfly {
+  animation: hover-drift 12s ease-in-out infinite;
+}
+
+@keyframes hover-drift {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(-18deg);
+  }
+  25% {
+    transform: translate(26px, -22px) rotate(-6deg);
+  }
+  50% {
+    transform: translate(64px, -8px) rotate(8deg);
+  }
+  75% {
+    transform: translate(22px, 14px) rotate(-24deg);
+  }
+}
+
+.hero__butterfly .flap {
+  animation: flutter 0.42s ease-in-out infinite alternate;
+}
+
+/* ================================================================ watercolor washes and flowing rules */
+.section__num {
+  z-index: 0;
+}
+
+.section__num::before {
+  content: '';
+  position: absolute;
+  left: -0.7em;
+  right: -0.7em;
+  top: -0.55em;
+  bottom: -0.55em;
+  z-index: -1;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 100'%3E%3Cfilter id='w' x='-20%25' y='-20%25' width='140%25' height='140%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.04' numOctaves='3' seed='3'/%3E%3CfeDisplacementMap in='SourceGraphic' scale='20'/%3E%3CfeGaussianBlur stdDeviation='1.1'/%3E%3C/filter%3E%3Cg filter='url(%23w)'%3E%3Cellipse cx='60' cy='52' rx='42' ry='30' fill='%23a7c9c0' fill-opacity='.45'/%3E%3Cellipse cx='52' cy='47' rx='24' ry='17' fill='%23a7c9c0' fill-opacity='.4'/%3E%3C/g%3E%3C/svg%3E")
+    center / 100% 100% no-repeat;
+  pointer-events: none;
+}
+
+.section--night .section__num::before {
+  opacity: 0.35;
+}
+
+.lab .section__num::before {
+  opacity: 0.6;
+}
+
+.wave-rule svg path:first-child {
+  stroke-dasharray: 7 5;
+  animation: dash-flow 2.6s linear infinite;
+}
+
+@keyframes dash-flow {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+
+/* ================================================================ fireflies and night edges */
+.fireflies {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.fireflies i {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #f6e7a6;
+  box-shadow: 0 0 10px 4px rgba(246, 231, 166, 0.45);
+  animation:
+    ff-drift var(--dur) ease-in-out infinite alternate,
+    ff-pulse var(--pulse) ease-in-out infinite;
+}
+
+@keyframes ff-drift {
+  to {
+    transform: translate(var(--dx), var(--dy));
+  }
+}
+
+@keyframes ff-pulse {
+  0%,
+  100% {
+    opacity: 0.1;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.wave-edge {
+  position: absolute;
+  left: 0;
+  width: 200%;
+  height: 44px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.wave-edge--top {
+  top: -1px;
+  animation: edge-top 38s linear infinite;
+}
+
+.wave-edge--bottom {
+  bottom: -1px;
+  animation: slide-half 44s linear infinite reverse;
+}
+
+@keyframes edge-top {
+  from {
+    transform: scaleY(-1) translate3d(0, 0, 0);
+  }
+  to {
+    transform: scaleY(-1) translate3d(-50%, 0, 0);
+  }
+}
+
+.wave-edge__fill {
+  fill: var(--paper);
+}
+
+.wave-edge__foam {
+  fill: rgba(167, 201, 192, 0.35);
+}
+
+.section--night {
+  padding-top: clamp(4rem, 8vw, 6rem);
+  padding-bottom: 0;
+}
+
+/* ================================================================ moonlit shore */
+.flow > .night-shore,
+.flow > .pond,
+.flow > .forest-band {
+  grid-column: full;
+}
+
+.night-shore {
+  position: relative;
+  height: clamp(170px, 18vw, 240px);
+  margin-top: 3rem;
+}
+
+.night-shore__water {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 35%);
+  mask-image: linear-gradient(180deg, transparent, #000 35%);
+}
+
+.night-shore__rock {
+  position: absolute;
+  right: clamp(1rem, 6vw, 6rem);
+  bottom: 30px;
+  width: clamp(150px, 18vw, 240px);
+  height: auto;
+}
+
+.rock {
+  fill: #08171d;
+}
+
+.cat-body {
+  fill: #050f13;
+  stroke: rgba(207, 226, 220, 0.18);
+  stroke-width: 0.8;
+}
+
+.cat-tail {
+  fill: none;
+  stroke: #050f13;
+  stroke-width: 6;
+  stroke-linecap: round;
+  transform-box: fill-box;
+  transform-origin: 0% 90%;
+  animation: tail 3.6s ease-in-out infinite alternate;
+}
+
+@keyframes tail {
+  from {
+    transform: rotate(-9deg);
+  }
+  to {
+    transform: rotate(7deg);
+  }
+}
+
+.cat-eye {
+  fill: #f0c95e;
+  filter: drop-shadow(0 0 3px rgba(240, 201, 94, 0.9));
+}
+
+.sitting-cat .blink {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: blink 5.5s ease-in-out infinite;
+}
+
+/* ================================================================ lily pond */
+.pond {
+  position: relative;
+  height: clamp(150px, 18vw, 240px);
+  margin: 3rem 0 0;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+
+.pond svg {
+  width: 100%;
+  height: 100%;
+}
+
+.pond__ripples path {
+  fill: none;
+  stroke: rgba(237, 244, 239, 0.75);
+  stroke-width: 1.1;
+  animation: pond-flow 30s linear infinite;
+}
+
+@keyframes pond-flow {
+  to {
+    transform: translateX(-1200px);
+  }
+}
+
+.pad {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pad-bob 5.5s ease-in-out infinite alternate;
+}
+
+@keyframes pad-bob {
+  from {
+    transform: translateY(0) rotate(-0.8deg);
+  }
+  to {
+    transform: translateY(-3px) rotate(0.8deg);
+  }
+}
+
+.pad__shadow {
+  fill: rgba(16, 44, 54, 0.22);
+}
+
+.pad__leaf {
+  fill: #7fa27a;
+  stroke: #55704f;
+  stroke-width: 1.2;
+}
+
+.pad__vein {
+  fill: none;
+  stroke: rgba(237, 244, 239, 0.45);
+  stroke-width: 1;
+}
+
+.lotus ellipse {
+  fill: #f4d0c4;
+  stroke: #c77660;
+  stroke-width: 0.7;
+}
+
+.lotus__heart {
+  fill: #e8c46a;
+}
+
+.reed path {
+  fill: none;
+  stroke: #55704f;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+}
+
+.reed rect {
+  fill: #7a5a43;
+}
+
+.reed {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: reed-sway 6s ease-in-out infinite alternate;
+}
+
+@keyframes reed-sway {
+  from {
+    transform: rotate(-2.5deg);
+  }
+  to {
+    transform: rotate(2.5deg);
+  }
+}
+
+.pond__splash ellipse {
+  fill: none;
+  stroke: rgba(237, 244, 239, 0.9);
+  stroke-width: 1.3;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: splash 1.6s ease-out both;
+}
+
+@keyframes splash {
+  from {
+    transform: scale(0.2);
+    opacity: 1;
+  }
+  to {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+
+.pond__frog {
+  color: var(--ink);
+  --frog: #9ccb93;
+}
+
+
+.dragonfly {
+  animation: dragonfly 24s linear infinite;
+}
+
+.dragonfly path {
+  stroke: #2a6770;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+}
+
+.dragonfly ellipse {
+  fill: rgba(237, 244, 239, 0.7);
+  stroke: rgba(36, 49, 56, 0.45);
+  stroke-width: 0.6;
+}
+
+@keyframes dragonfly {
+  0% {
+    transform: translate(-80px, 70px);
+  }
+  20% {
+    transform: translate(240px, 40px);
+  }
+  24% {
+    transform: translate(260px, 46px);
+  }
+  50% {
+    transform: translate(620px, 30px);
+  }
+  54% {
+    transform: translate(640px, 38px);
+  }
+  80% {
+    transform: translate(980px, 60px);
+  }
+  100% {
+    transform: translate(1300px, 34px);
+  }
+}
+
+/* ================================================================ forest band */
+.forest-band {
+  position: relative;
+  height: clamp(190px, 24vw, 320px);
+  margin-top: 3rem;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 18%, #000 78%, transparent);
+  mask-image: linear-gradient(180deg, transparent, #000 18%, #000 78%, transparent);
+}
+
+.forest-band svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.trees--far {
+  fill: #b9d1c8;
+  transform: translateY(calc((var(--p, 0.5) - 0.5) * -10px));
+}
+
+.trees--mid {
+  fill: #8fae95;
+  transform: translateY(calc((var(--p, 0.5) - 0.5) * -22px));
+}
+
+.trees--near {
+  fill: #55704f;
+  transform: translateY(calc((var(--p, 0.5) - 0.5) * -40px));
+}
+
+.mist {
+  opacity: 0.75;
+  animation: mist-drift 34s ease-in-out infinite alternate;
+}
+
+.mist--b {
+  animation-duration: 48s;
+  animation-direction: alternate-reverse;
+  opacity: 0.6;
+}
+
+@keyframes mist-drift {
+  from {
+    transform: translateX(-140px);
+  }
+  to {
+    transform: translateX(140px);
+  }
+}
+
+.rays {
+  opacity: 0.4;
+  animation: rays 10s ease-in-out infinite alternate;
+}
+
+@keyframes rays {
+  to {
+    opacity: 0.15;
+  }
+}
+
+.leaves {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.leaves svg {
+  position: absolute;
+  top: -20px;
+  width: 16px;
+  height: auto;
+  animation:
+    leaf-fall linear infinite,
+    leaf-sway ease-in-out infinite alternate;
+}
+
+.leaves path:first-child {
+  fill: #8fae95;
+}
+
+.leaves svg:nth-child(3n) path:first-child {
+  fill: #c77660;
+}
+
+.leaves svg:nth-child(4n) path:first-child {
+  fill: #e8c46a;
+}
+
+.leaves path + path {
+  fill: none;
+  stroke: rgba(36, 49, 56, 0.35);
+  stroke-width: 0.8;
+}
+
+@keyframes leaf-fall {
+  0% {
+    translate: 0 -20px;
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    translate: var(--drift) 340px;
+    opacity: 0;
+  }
+}
+
+@keyframes leaf-sway {
+  from {
+    rotate: -50deg;
+  }
+  to {
+    rotate: 60deg;
+  }
+}
+
+/* ================================================================ noise to digits */
+.flow-digits {
+  position: relative;
+  z-index: 1;
+  max-width: var(--wide);
+  margin: clamp(2rem, 5vw, 3.5rem) auto 0;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(207, 226, 220, 0.18);
+}
+
+.flow-digits canvas {
+  display: block;
+  width: 100%;
+  height: clamp(90px, 11vw, 130px);
+}
+
+.flow-digits figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.4rem;
+  margin-top: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  color: rgba(207, 226, 220, 0.7);
+}
+
+.flow-digits__t {
+  color: #e4a58f;
+  min-width: 5.5rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.flow-digits__note {
+  margin-left: auto;
+  opacity: 0.7;
+}
+
+/* ================================================================ sketchbook */
+.flow > .sketchbook {
+  grid-column: wide;
+}
+
+.sketchbook {
+  position: relative;
+  margin: 3.5rem 0 2.5rem;
+  padding: 2.4rem clamp(1rem, 3vw, 2.4rem) 3rem 4.8rem;
+  background-color: #fcf9f0;
+  background-image:
+    radial-gradient(circle, rgba(42, 103, 112, 0.14) 0.8px, transparent 1.2px),
+    linear-gradient(90deg, transparent 2.2rem, rgba(199, 118, 96, 0.28) 2.2rem, rgba(199, 118, 96, 0.28) calc(2.2rem + 1px), transparent calc(2.2rem + 1px));
+  background-size:
+    18px 18px,
+    100% 100%;
+  border: 1px solid rgba(36, 49, 56, 0.14);
+  border-radius: 2px 6px 6px 2px;
+  box-shadow:
+    0 24px 50px -30px rgba(16, 44, 54, 0.45),
+    7px 7px 0 -1px #f3eee2,
+    7px 7px 0 0 rgba(36, 49, 56, 0.14),
+    14px 14px 0 -1px #efe9da,
+    14px 14px 0 0 rgba(36, 49, 56, 0.1);
+}
+
+/* binding holes */
+.sketchbook::before {
+  content: '';
+  position: absolute;
+  left: 0.55rem;
+  top: 1.2rem;
+  bottom: 1.2rem;
+  width: 12px;
+  background: radial-gradient(circle at 6px 6px, var(--paper-3) 0 4px, rgba(36, 49, 56, 0.35) 4.6px, transparent 5.4px) 0 0 / 12px 30px repeat-y;
+  pointer-events: none;
+}
+
+.sketchbook__head {
+  display: flex;
+  align-items: flex-end;
+  gap: 1.1rem;
+  margin: 0 0 2.6rem -3.6rem;
+}
+
+.inkpot {
+  position: relative;
+  z-index: 3;
+  width: 3.2rem;
+  flex: none;
+}
+
+.inkpot__svg {
+  width: 100%;
+  overflow: visible;
+}
+
+.inkpot__shadow {
+  fill: rgba(16, 44, 54, 0.18);
+}
+
+.inkpot__glass {
+  fill: rgba(167, 201, 192, 0.35);
+  stroke: var(--ink);
+  stroke-width: 1.3;
+}
+
+.inkpot__ink {
+  fill: #12303a;
+}
+
+.inkpot__neck {
+  fill: #1d4656;
+  stroke: var(--ink);
+  stroke-width: 1;
+}
+
+.inkpot__mouth {
+  fill: #071a20;
+}
+
+.inkpot__label {
+  fill: var(--paper);
+  stroke: rgba(36, 49, 56, 0.4);
+  stroke-width: 0.6;
+}
+
+.inkpot__shine {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.65);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+.sketchbook__kicker {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--coral-2);
+  margin: 0;
+}
+
+.sketchbook__title {
+  font-family: var(--font-hand);
+  font-weight: 500;
+  font-size: clamp(2.6rem, 2rem + 2.6vw, 3.8rem);
+  line-height: 1;
+  color: #12303a;
+  transform: rotate(-1.5deg);
+  transform-origin: left bottom;
+  padding-bottom: 0.2rem;
+}
+
+.sketchbook__intro p,
+.sketchbook__pages > p {
+  max-width: var(--measure);
+}
+
+.sketchbook__note {
+  font-family: var(--font-hand);
+  font-size: 2rem;
+  line-height: 1.1;
+  color: var(--coral-2);
+  margin: 2.6rem 0 0.6rem;
+  transform: rotate(-1deg);
+}
+
+.sketchbook .timeline {
+  position: relative;
+  background: #fffdf8;
+  border: 0;
+  box-shadow:
+    0 1px 2px rgba(16, 44, 54, 0.12),
+    0 14px 28px -20px rgba(16, 44, 54, 0.45);
+}
+
+.sketchbook .timeline:nth-of-type(odd) {
+  transform: rotate(-0.4deg);
+}
+
+.sketchbook .timeline:nth-of-type(even) {
+  transform: rotate(0.35deg);
+}
+
+/* tape */
+.sketchbook .timeline::before,
+.sketchbook .timeline::after {
+  content: '';
+  position: absolute;
+  top: -11px;
+  width: 92px;
+  height: 22px;
+  background: rgba(232, 196, 106, 0.38);
+  border-left: 1px dashed rgba(255, 255, 255, 0.5);
+  border-right: 1px dashed rgba(255, 255, 255, 0.5);
+  pointer-events: none;
+}
+
+.sketchbook .timeline::before {
+  left: 24px;
+  transform: rotate(-4deg);
+}
+
+.sketchbook .timeline::after {
+  right: 24px;
+  transform: rotate(5deg);
+  background: rgba(167, 201, 192, 0.45);
+}
+
+/* the ink and the pen */
+.ink {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.ink__line {
+  fill: none;
+  stroke: #12303a;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ink__line--edge {
+  stroke: #2a6770;
+  stroke-width: 1;
+  opacity: 0.6;
+  transform: translate(0.9px, 1px);
+}
+
+.ink__splat {
+  fill: #12303a;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(0.2);
+  transition:
+    opacity 0.4s,
+    transform 0.4s var(--ease-water);
+}
+
+.sketchbook.is-signed .ink__splat {
+  opacity: 0.85;
+  transform: scale(1);
+}
+
+.sketchbook.is-done .ink__pen {
+  transition: transform 0.9s var(--ease-water);
+}
+
+.pen {
+  transform: scale(0.82);
+  filter: drop-shadow(2px 4px 3px rgba(16, 44, 54, 0.25));
+}
+
+.pen__nib {
+  fill: #cfd9d5;
+  stroke: #4a5a60;
+  stroke-width: 0.6;
+}
+
+.pen__slit {
+  stroke: #243138;
+  stroke-width: 0.7;
+}
+
+.pen__breather {
+  fill: #243138;
+}
+
+.pen__grip {
+  fill: #1d4656;
+}
+
+.pen__band {
+  fill: var(--coral);
+}
+
+.pen__body {
+  fill: #0d2730;
+  stroke: #071a20;
+  stroke-width: 0.6;
+}
+
+.pen__clip {
+  fill: none;
+  stroke: #c9a96a;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.pen__shine {
+  stroke: rgba(237, 244, 239, 0.35);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+@media (max-width: 700px) {
+  .sketchbook {
+    padding-left: 3.4rem;
+    margin-left: calc(-1 * var(--gutter) + 0.4rem);
+    margin-right: calc(-1 * var(--gutter) + 0.4rem);
+  }
+  .sketchbook__head {
+    margin-left: -2.8rem;
+    gap: 0.6rem;
+  }
+  .inkpot {
+    width: 2.5rem;
+  }
+  .sketchbook .timeline {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
