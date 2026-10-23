@@ -1,0 +1,47 @@
+:root {
+  /* water and paper */
+  --ink: #102c36;
+  --ink-2: #16394a;
+  --ink-3: #1d4656;
+  --current: #2a6770;
+  --current-2: #3d7f86;
+  --seaglass: #a7c9c0;
+  --seaglass-2: #cfe2dc;
+  --foam: #edf4ef;
+  --paper: #f8f5ec;
+  --paper-2: #f1ecdf;
+  --paper-3: #e8e1cf;
+  --charcoal: #243138;
+  --charcoal-2: #4a5a60;
+  --charcoal-3: #6f7d80;
+  --coral: #c77660;
+  --coral-2: #b05f4a;
+  --moss: #728d70;
+  --moss-2: #55704f;
+  --hairline: rgba(36, 49, 56, 0.16);
+  --hairline-strong: rgba(36, 49, 56, 0.32);
+
+  /* type */
+  --font-display: 'Fraunces Variable', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+  --font-body: 'Instrument Sans', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --font-hand: 'Caveat', 'Bradley Hand', cursive;
+
+  --step--2: 0.74rem;
+  --step--1: 0.86rem;
+  --step-0: 1.0625rem;
+  --step-1: 1.25rem;
+  --step-2: clamp(1.45rem, 1.2rem + 0.9vw, 1.85rem);
+  --step-3: clamp(1.8rem, 1.4rem + 1.6vw, 2.5rem);
+  --step-4: clamp(2.4rem, 1.6rem + 3vw, 3.8rem);
+  --step-5: clamp(3.6rem, 2rem + 7vw, 8.6rem);
+
+  /* measure and layout */
+  --measure: 40rem;
+  --wide: 66rem;
+  --rail: 15.5rem;
+  --gutter: clamp(1rem, 4vw, 3rem);
+  --radius: 3px;
+
+  --ease-water: cubic-bezier(0.45, 0.05, 0.2, 1);
+}

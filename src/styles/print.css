@@ -1,0 +1,720 @@
+/* Printed report: US Letter, everything visible, no motion, no dark ink floods. */
+@page {
+  size: letter;
+  margin: 0.55in 0.6in 0.65in;
+
+  @bottom-center {
+    content: 'Flow of Water · sane24.github.io/flow-of-water · ' counter(page);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 7pt;
+    color: #6f7d80;
+  }
+}
+
+@page :first {
+  @bottom-center {
+    content: none;
+  }
+}
+
+@media print {
+  :root {
+    --gutter: 0px;
+  }
+
+  html {
+    font-size: 9.6pt;
+    scroll-behavior: auto;
+  }
+
+  body {
+    background: #fff;
+    color: #243138;
+    line-height: 1.45;
+    overflow: visible;
+  }
+
+  body::before,
+  .rail,
+  .progress-bar,
+  .mobile-dock,
+  .sheet,
+  .skip-link,
+  .lightbox,
+  .print-button,
+  .turn-button,
+  .screen-only,
+  .reading-hint,
+  .section__anchor,
+  .hero__sky,
+  .hero__sea,
+  .hero__shore,
+  .hero__begin,
+  .hero__butterfly,
+  .hero__fern,
+  .intro__contours,
+  .falls,
+  canvas,
+  .timeline__stage,
+  .timeline__scale,
+  .anagram__art,
+  .hybrid__controls,
+  .hybrid__far-swap,
+  .clockwork__glass,
+  .hand-note svg {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  span.print-only {
+    display: inline !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  a {
+    color: #1f5560;
+    text-decoration: none;
+  }
+
+  img {
+    break-inside: avoid;
+  }
+
+  /* -------------------------------------------------------- title block */
+  .print-header {
+    font-family: var(--font-mono);
+    font-size: 7.5pt;
+    color: #4a5a60;
+    border-bottom: 0.5pt solid #c9c3b4;
+    padding-bottom: 4pt;
+    margin-bottom: 10pt;
+  }
+
+  .print-header p {
+    margin: 0;
+  }
+
+  .hero {
+    min-height: 0;
+    background: none;
+    color: var(--charcoal);
+    padding: 0 0 6pt;
+    overflow: visible;
+  }
+
+  .hero__inner {
+    display: grid;
+    grid-template-columns: 1fr 1.9in;
+    gap: 0.35in;
+    padding: 0;
+    max-width: none;
+    align-items: start;
+  }
+
+  .hero__kicker {
+    color: var(--current);
+    margin-bottom: 8pt;
+  }
+
+  .hero__title {
+    color: var(--ink);
+    font-size: 40pt;
+    margin-bottom: 8pt;
+  }
+
+  .hero__title em {
+    color: var(--current);
+  }
+
+  .hero__subtitle {
+    color: var(--current);
+    font-size: 14pt;
+    max-width: none;
+    margin-bottom: 10pt;
+  }
+
+  .hero__ledger {
+    border-color: #c9c3b4;
+    margin-bottom: 0;
+    max-width: none;
+  }
+
+  .hero__ledger div {
+    border-color: #ddd6c6;
+    padding: 2.5pt 0;
+    font-size: 8.5pt;
+  }
+
+  .hero__ledger dt {
+    color: var(--charcoal-3);
+  }
+
+  .hero__ledger dd,
+  .hero__ledger a {
+    color: var(--ink);
+  }
+
+  .hero__actions {
+    display: none;
+  }
+
+  .hero__plate {
+    width: 1.9in;
+  }
+
+  .hero__porthole {
+    box-shadow: none;
+    border: 0.75pt solid var(--ink);
+  }
+
+  .hero__plate figcaption {
+    color: var(--charcoal-2);
+    margin-top: 5pt;
+    font-size: 6.5pt;
+  }
+
+  .hero__plate-label {
+    color: var(--coral-2);
+  }
+
+  /* -------------------------------------------------------- page flow */
+  .page,
+  .flow,
+  .report {
+    display: block;
+  }
+
+  .flow > * {
+    max-width: none;
+  }
+
+  .intro {
+    padding: 8pt 0 0;
+    overflow: visible;
+  }
+
+  .intro__title,
+  .closing__title {
+    font-size: 20pt;
+    margin-bottom: 8pt;
+  }
+
+  .lede {
+    font-size: 10.5pt;
+  }
+
+  .keyidea {
+    background: none;
+    margin: 10pt 0;
+    padding: 8pt 12pt 2pt;
+    break-inside: avoid;
+  }
+
+  .setup-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12pt;
+    break-inside: avoid;
+  }
+
+  .wave-rule {
+    margin: 14pt 0 0;
+  }
+
+  .opener {
+    margin: 0 0 6pt;
+    padding: 0 0 10pt;
+    background: none !important;
+    color: var(--charcoal);
+    border: 0;
+    border-bottom: 0.75pt solid var(--ink);
+    break-after: avoid;
+    overflow: visible;
+  }
+
+  .opener__inner,
+  .opener--falls .opener__inner {
+    display: grid;
+    grid-template-columns: auto 1fr 1.8in;
+    gap: 14pt;
+    max-width: none;
+  }
+
+  .opener--falls {
+    break-before: page;
+  }
+
+  .opener--falls .opener__inner {
+    grid-template-columns: auto 1fr;
+  }
+
+  .opener--falls .opener__numeral,
+  .opener--falls .opener__text {
+    grid-column: auto;
+  }
+
+  .opener__numeral {
+    font-size: 54pt;
+    -webkit-text-stroke-color: var(--current) !important;
+  }
+
+  .opener__title,
+  .opener--falls .opener__title {
+    color: var(--ink);
+    font-size: 22pt;
+  }
+
+  .opener__official,
+  .opener--falls .opener__official {
+    color: var(--current);
+    font-size: 11pt;
+    margin-bottom: 6pt;
+  }
+
+  .opener__part,
+  .opener--falls .opener__part {
+    color: var(--coral-2);
+  }
+
+  .opener__plate img {
+    opacity: 1;
+  }
+
+  .section {
+    padding: 12pt 0 0;
+  }
+
+  .section__head {
+    display: flex;
+    margin-bottom: 8pt;
+    padding-bottom: 5pt;
+    break-after: avoid;
+  }
+
+  .section__num {
+    position: static;
+    font-size: 15pt;
+    min-width: 0;
+  }
+
+  .section__title {
+    font-size: 15pt;
+  }
+
+  .section__motif {
+    position: static;
+    width: 0.4in;
+  }
+
+  .subhead {
+    font-size: 12pt;
+    margin: 12pt 0 6pt;
+    break-after: avoid;
+  }
+
+  h2,
+  h3,
+  h4 {
+    break-after: avoid;
+  }
+
+  p,
+  li {
+    orphans: 3;
+    widows: 3;
+  }
+
+  /* night band and lab paper become plain paper */
+  .section--night,
+  .lab {
+    background: none !important;
+    color: var(--charcoal);
+    margin: 0;
+    padding-bottom: 0;
+  }
+
+  .section--night .section__title,
+  .section--night .subhead,
+  .section--night strong,
+  .section--night .katex,
+  .section--night .anagram__name,
+  .section--night .anagram__prompts dd,
+  .section--night .caption,
+  .section--night .figrow__label,
+  .section--night .caption__meta {
+    color: var(--ink);
+  }
+
+  .section--night .section__num,
+  .section--night .anagram__index {
+    color: var(--coral-2);
+  }
+
+  .section--night .section__motif {
+    color: var(--ink);
+  }
+
+  .section--night :not(pre) > code {
+    background: rgba(167, 201, 192, 0.28);
+    color: var(--ink);
+  }
+
+  .section--night .anagram__prompts dt,
+  .section--night .anagram__pair-grid span {
+    color: var(--charcoal-2);
+  }
+
+  .lab .section__num {
+    font-size: 13pt;
+  }
+
+  /* -------------------------------------------------------- figures */
+  .fig {
+    margin: 8pt 0 10pt;
+  }
+
+  .fig--small {
+    max-width: 1.7in;
+  }
+
+  .fig--kind-plot .fig__frame,
+  .fig--text .fig__frame {
+    max-width: 4.8in;
+  }
+
+  .figrow--stack .figrow__grid {
+    max-width: 5.4in;
+  }
+
+  .eyebrow {
+    break-after: avoid;
+  }
+
+  .closing {
+    break-before: page;
+  }
+
+  .fig__frame {
+    background: none;
+  }
+
+  .caption {
+    font-size: 8pt;
+    margin-top: 3pt;
+  }
+
+  .caption__meta {
+    font-size: 6.5pt;
+  }
+
+  .figrow__grid {
+    gap: 4pt;
+  }
+
+  .figrow__label {
+    font-size: 6.8pt;
+  }
+
+  .eq {
+    margin: 6pt 0 8pt;
+    break-inside: avoid;
+  }
+
+  .eq__body {
+    overflow: visible;
+  }
+
+  .katex-display {
+    margin: 2pt 0 !important;
+  }
+
+  .katex {
+    font-size: 1.02em;
+  }
+
+  .params {
+    margin: 6pt 0 8pt;
+    background: none;
+    break-inside: avoid;
+    font-size: 7pt;
+  }
+
+  .params div {
+    padding: 2.5pt 6pt;
+  }
+
+  .callout {
+    background: none;
+    border: 0.5pt solid var(--coral);
+    border-left-width: 2pt;
+    padding: 6pt 10pt 1pt;
+    margin: 8pt 0;
+  }
+
+  .table-wrap {
+    overflow: visible;
+    margin: 2pt 0 10pt;
+    break-inside: avoid;
+  }
+
+  .data-table {
+    font-size: 7pt;
+  }
+
+  .data-table th,
+  .data-table td {
+    padding: 2pt 4pt;
+  }
+
+  .diagram__frame {
+    border: 0.5pt solid #c9c3b4;
+    padding: 6pt;
+    overflow: visible;
+  }
+
+  .unet {
+    min-width: 0;
+  }
+
+  .hand-note {
+    font-size: 12pt;
+  }
+
+  /* -------------------------------------------------------- edit timelines: one compact row of eight */
+  .timeline {
+    padding: 6pt 0 0;
+    margin: 6pt 0 10pt;
+    border: 0;
+    border-top: 0.5pt solid #c9c3b4;
+    background: none !important;
+  }
+
+  .timeline__head {
+    margin-bottom: 4pt;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 10pt;
+  }
+
+  .timeline__title {
+    font-size: 11pt;
+    margin: 0;
+  }
+
+  .timeline__head .prompt {
+    flex-basis: 100%;
+    font-size: 8.5pt;
+  }
+
+  .timeline__strip {
+    display: grid !important;
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    gap: 3pt;
+    margin: 0;
+    overflow: visible;
+  }
+
+  .timeline__tile,
+  .timeline__tile--input {
+    display: block !important;
+  }
+
+  .timeline__tile img {
+    opacity: 1 !important;
+    outline: 0 !important;
+  }
+
+  .timeline__tile span {
+    font-size: 6.5pt;
+    color: var(--charcoal-2) !important;
+    margin-top: 1.5pt;
+  }
+
+  .timeline__tile--input span {
+    color: var(--current) !important;
+    font-weight: 500;
+  }
+
+  /* -------------------------------------------------------- anagrams: always both orientations */
+  .anagram-list {
+    gap: 10pt;
+    margin: 8pt 0;
+  }
+
+  .anagram {
+    display: block;
+    break-inside: avoid;
+    border-top: 0.5pt solid #c9c3b4;
+    padding-top: 6pt;
+  }
+
+  .anagram__name {
+    font-size: 13pt;
+    margin: 0 0 4pt;
+  }
+
+  .anagram__prompts {
+    grid-template-columns: 1fr 1fr;
+    gap: 2pt 12pt;
+    margin-bottom: 4pt;
+  }
+
+  .anagram__prompts dd {
+    font-size: 8.5pt;
+  }
+
+  .anagram__body p {
+    margin-bottom: 4pt;
+  }
+
+  .anagram__text {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 3.7in;
+    column-gap: 14pt;
+    align-items: start;
+  }
+
+  .anagram__text > * {
+    grid-column: 1;
+  }
+
+  .anagram__pair {
+    grid-column: 2;
+    grid-row: 1 / span 5;
+    margin: 0;
+  }
+
+  .anagram__pair-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 6pt;
+  }
+
+  .anagram__prompts {
+    grid-template-columns: 1fr;
+  }
+
+  /* -------------------------------------------------------- hybrids: always near and far */
+  .hybrid-list {
+    gap: 10pt;
+    margin: 6pt 0;
+  }
+
+  .hybrid,
+  .hybrid--compact {
+    display: grid;
+    grid-template-columns: 3.3in 1fr;
+    grid-template-areas:
+      'figure head'
+      'figure body';
+    gap: 2pt 14pt;
+    padding-top: 6pt;
+    break-inside: avoid;
+    border-color: #c9c3b4;
+  }
+
+  .hybrid__name {
+    font-size: 12pt;
+    margin: 0 0 4pt;
+  }
+
+  .hybrid__prompts dd {
+    font-size: 8.5pt;
+  }
+
+  .hybrid__views {
+    grid-template-columns: 2.25in 1fr;
+    gap: 8pt;
+  }
+
+  .hybrid__window {
+    background: none;
+    border: 0;
+  }
+
+  .hybrid__scaler,
+  .hybrid__window.is-far .hybrid__scaler {
+    width: 100% !important;
+    opacity: 1 !important;
+  }
+
+  .hybrid__view--far {
+    border: 0.5pt dashed #9aa4a6;
+  }
+
+  .hybrid__view-label {
+    font-size: 6.5pt;
+  }
+
+  .clockwork {
+    display: block;
+    margin: 0;
+  }
+
+  .clockwork .hybrid {
+    margin-bottom: 8pt;
+  }
+
+  /* -------------------------------------------------------- closing */
+  .obs-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8pt;
+  }
+
+  .obs {
+    background: none;
+    border-top-width: 1pt;
+    padding: 5pt 0 0;
+  }
+
+  .obs h3 {
+    font-size: 11pt;
+  }
+
+  .obs p {
+    font-size: 8.8pt;
+  }
+
+  .references {
+    break-before: page;
+  }
+
+  .ref-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12pt;
+  }
+
+  .ref-list {
+    font-size: 8pt;
+  }
+
+  .ref-list a[href^='http']::after {
+    content: ' (' attr(href) ')';
+    font-family: var(--font-mono);
+    font-size: 6.5pt;
+    color: var(--charcoal-3);
+    overflow-wrap: anywhere;
+  }
+
+  .colophon {
+    padding-bottom: 0;
+    margin-top: 12pt;
+  }
+
+  .colophon a {
+    display: none;
+  }
+}
