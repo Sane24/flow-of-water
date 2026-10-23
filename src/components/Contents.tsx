@@ -20,6 +20,12 @@ export const TOC: Item[] = [
       { id: 'a-1-5', num: '1.5', label: 'Euler sampling' },
       { id: 'a-1-6', num: '1.6', label: 'Images from noise' },
       { id: 'a-2-1', num: '2.1', label: 'Classifier-free guidance' },
+    ],
+  },
+  {
+    id: 'creative',
+    label: 'Creative applications',
+    children: [
       { id: 'a-3-1', num: '3.1', label: 'Image-to-image editing' },
       { id: 'a-3-2', num: '3.2', label: 'Text-guided editing' },
       { id: 'a-3-3', num: '3.3', label: 'Visual anagrams' },
@@ -41,7 +47,6 @@ export const TOC: Item[] = [
     ],
   },
   { id: 'observations', label: 'Experiments and observations' },
-  { id: 'references', label: 'References and code' },
 ]
 
 const ALL_IDS = TOC.flatMap((i) => [i.id, ...(i.children ?? []).map((c) => c.id)])

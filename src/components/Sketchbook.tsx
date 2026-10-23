@@ -3,7 +3,9 @@ import { useEffect, useRef, useState, type ReactNode } from 'react'
 /*
  * A separate "sketchbook" spread for my own drawings. As it scrolls into view a fountain pen
  * rises out of an ink pot, writes a flourish under the title, then keeps drawing an ink thread
- * down the margin as the reader moves through the drawings, and finally lies down at the end.
+ * down the right-hand margin as the reader moves through the drawings, and finally lies down at
+ * the end. The ink path is laid out mirrored (as if the pot sat on the left) and flipped back
+ * when drawn; the pen itself is never mirrored.
  */
 
 interface Geometry {
@@ -25,10 +27,11 @@ function buildPath(container: HTMLElement, pot: HTMLElement, title: HTMLElement)
   const tr = title.getBoundingClientRect()
   const w = c.width
   const h = container.scrollHeight
-  const px = pr.left - c.left + pr.width * 0.5
+  // x is measured from the right edge, so the pot on the right reads as if it were on the left
+  const px = c.right - pr.right + pr.width * 0.5
   const py = pr.top - c.top + pr.height * 0.22
-  const tx0 = tr.left - c.left - 4
-  const tx1 = Math.min(w - 40, tr.right - c.left + 26)
+  const tx0 = c.right - tr.right - 4
+  const tx1 = Math.min(w - 40, c.right - tr.left + 26)
   const ty = tr.bottom - c.top + 8
   const mx = Math.max(18, px - 4)
 
@@ -148,7 +151,8 @@ export function Sketchbook({ title, kicker, intro, children }: Props) {
       for (let i = 0; i <= n; i++) {
         const len = (total * i) / n
         const p = probe.getPointAtLength(len)
-        samples[i * 3] = p.x
+        // samples are stored in page coordinates, flipped back from the mirrored layout
+        samples[i * 3] = base.w - p.x
         samples[i * 3 + 1] = p.y
         samples[i * 3 + 2] = len
         const dist = Math.hypot(p.x - base.swashMarker[0], p.y - base.swashMarker[1])
@@ -158,7 +162,9 @@ export function Sketchbook({ title, kicker, intro, children }: Props) {
         }
       }
       // the swash phase ends where the sweep reaches the gutter
-      const gutterStart = samples.findIndex((_, i) => i % 3 === 2 && samples[i] > swashEnd && samples[i - 2] < base.pot[0] + 50)
+      const gutterStart = samples.findIndex(
+        (_, i) => i % 3 === 2 && samples[i] > swashEnd && base.w - samples[i - 2] < base.pot[0] + 50,
+      )
       const sweepEnd = gutterStart > 0 ? samples[gutterStart] : swashEnd
       setGeo({ ...base, swashEnd: sweepEnd, total, samples })
     }
@@ -251,17 +257,23 @@ export function Sketchbook({ title, kicker, intro, children }: Props) {
     <div ref={box} className={`sketchbook ${done ? 'is-done' : ''} ${swashDone ? 'is-signed' : ''}`}>
       {geo && (
         <svg className="ink" width={geo.w} height={geo.h} viewBox={`0 0 ${geo.w} ${geo.h}`} aria-hidden="true">
-          <path ref={pathA} className="ink__line" d={geo.d} style={{ strokeDasharray: geo.total, strokeDashoffset: geo.total }} />
-          <path
-            ref={pathB}
-            className="ink__line ink__line--edge"
-            d={geo.d}
-            style={{ strokeDasharray: geo.total, strokeDashoffset: geo.total }}
-          />
-          {geo.splats.map(([x, y, r], i) => (
-            <circle key={i} className="ink__splat" cx={x} cy={y} r={r} style={{ transitionDelay: `${i * 90}ms` }} />
-          ))}
-          <g ref={pen} className="ink__pen" style={{ transform: `translate(${geo.pot[0]}px, ${geo.pot[1] + 18}px)` }}>
+          <g transform={`matrix(-1 0 0 1 ${geo.w} 0)`}>
+            <path ref={pathA} className="ink__line" d={geo.d} style={{ strokeDasharray: geo.total, strokeDashoffset: geo.total }} />
+            <path
+              ref={pathB}
+              className="ink__line ink__line--edge"
+              d={geo.d}
+              style={{ strokeDasharray: geo.total, strokeDashoffset: geo.total }}
+            />
+            {geo.splats.map(([x, y, r], i) => (
+              <circle key={i} className="ink__splat" cx={x} cy={y} r={r} style={{ transitionDelay: `${i * 90}ms` }} />
+            ))}
+          </g>
+          <g
+            ref={pen}
+            className="ink__pen"
+            style={{ transform: `translate(${geo.w - geo.pot[0]}px, ${geo.pot[1] + 18}px)` }}
+          >
             <Pen />
           </g>
         </svg>

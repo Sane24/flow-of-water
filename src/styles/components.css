@@ -1143,10 +1143,101 @@ img[data-pixelated] {
 }
 
 /* ---------------------------------------------------------------- closing */
+/* the wine glass anagram once more, beside the observations in a 2 × 2 grid */
+.closing__spread {
+  display: grid;
+  grid-template-columns: minmax(14rem, 20rem) minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: center;
+}
+
+.closing__disc .anagram__disc {
+  box-shadow: 0 12px 40px rgba(16, 44, 54, 0.2);
+}
+
+.closing__disc .anagram__ring circle,
+.closing__disc .anagram__ring line {
+  stroke: rgba(16, 44, 54, 0.4);
+}
+
+.closing__disc .turn-button {
+  color: var(--ink);
+  border-color: var(--hairline-strong);
+  background: rgba(237, 244, 239, 0.6);
+}
+
+.closing__disc .turn-button:hover {
+  border-color: var(--ink);
+  background: rgba(237, 244, 239, 0.95);
+}
+
+.closing__disc .anagram__reading {
+  color: var(--ink);
+  font-size: 0.95rem;
+}
+
+.closing__disc .anagram__orient {
+  color: var(--coral-2);
+}
+
 .obs-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.4rem;
+}
+
+.closing__again {
+  margin: 2.4rem 0 0;
+  text-align: center;
+}
+
+.closing__again a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 44px;
+  padding: 0.55rem 1.2rem;
+  border: 1px solid var(--hairline-strong);
+  border-radius: 999px;
+  background: rgba(237, 244, 239, 0.6);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.closing__again a:hover {
+  border-color: var(--ink);
+  background: rgba(237, 244, 239, 0.95);
+}
+
+.closing__again svg {
+  width: 0.7rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (max-width: 900px) {
+  .closing__spread {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .closing__disc {
+    width: 100%;
+    max-width: 20rem;
+    margin-inline: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .obs-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 .obs {
@@ -1166,46 +1257,6 @@ img[data-pixelated] {
 
 .obs p {
   font-size: 0.95rem;
-}
-
-.ref-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
-  gap: 2rem;
-}
-
-.ref-grid h3 {
-  font-size: 1.15rem;
-  margin: 0 0 0.6rem;
-}
-
-.ref-list {
-  list-style: none;
-  padding: 0;
-  font-size: 0.9rem;
-}
-
-.ref-list li {
-  padding: 0.35rem 0;
-  border-bottom: 1px solid var(--hairline);
-}
-
-.ref-list--credits li {
-  display: grid;
-  grid-template-columns: 3.6rem 1fr;
-  gap: 0.8rem;
-  align-items: start;
-}
-
-.ref-list--credits img {
-  width: 3.6rem;
-  height: 3.6rem;
-  object-fit: cover;
-}
-
-.small {
-  font-size: var(--step--1);
-  color: var(--charcoal-2);
 }
 
 .colophon {
@@ -1886,6 +1937,11 @@ img[data-pixelated] {
   animation-delay: -2.4s;
 }
 
+/* the frogs in §3.1 keep their eyes open */
+#a-3-1 .motif--frog .blink {
+  animation: none;
+}
+
 @keyframes blink {
   0%,
   93%,
@@ -1931,18 +1987,6 @@ img[data-pixelated] {
     transform: scale(1.6);
     opacity: 0;
   }
-}
-
-/* scroll reveal, only when motion is allowed */
-html.motion :is(.fig, .timeline, .anagram, .hybrid, .obs, .keyidea, .callout, .playground, .scrubber, .wipe, .diagram) {
-  transition:
-    opacity 0.9s var(--ease-water),
-    transform 0.9s var(--ease-water);
-}
-
-html.motion :is(.fig, .timeline, .anagram, .hybrid, .obs, .keyidea, .callout, .playground, .scrubber, .wipe, .diagram):not(.is-in) {
-  opacity: 0;
-  transform: translateY(18px);
 }
 
 /* a ripple on the section number you just jumped to */

@@ -124,10 +124,8 @@ export function Introduction() {
         class-conditioned flow matching models.
       </p>
       <p>
-        The title is a bit of a pun. Flow matching learns a velocity field that carries Gaussian noise toward images,
-        and sampling is just following that current downstream. A lot of my own experiments ended up being about water
-        anyway (the ocean in my cat anagram, the waves in the hourglass hybrid, the waterfall in the skull hybrid), so I
-        leaned into it.
+        The title is a bit of a pun: sampling is just following a learned current downstream from noise to an image.
+        A lot of my experiments ended up being about water anyway, so I leaned into it.
       </p>
       <div className="keyidea">
         <p className="keyidea__label">The one idea under everything on this page</p>
@@ -164,11 +162,6 @@ export function Introduction() {
           />
         </div>
       </div>
-      <p className="provenance-note">
-        Every result image on this page is a saved output from my two notebooks. Decorative drawings are original line
-        art made for this site, and the few engravings used as ornaments are public-domain prints credited at the end.
-        Small labels under each figure say which is which.
-      </p>
       <WaveRule />
     </section>
   )

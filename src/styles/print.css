@@ -750,26 +750,12 @@
     font-size: 8.8pt;
   }
 
-  .references {
-    break-before: page;
+  .closing__spread {
+    display: block;
   }
 
-  .ref-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 12pt;
-  }
-
-  .ref-list {
-    font-size: 8pt;
-  }
-
-  .ref-list a[href^='http']::after {
-    content: ' (' attr(href) ')';
-    font-family: var(--font-mono);
-    font-size: 6.5pt;
-    color: var(--charcoal-3);
-    overflow-wrap: anywhere;
+  .closing__again {
+    display: none;
   }
 
   .colophon {

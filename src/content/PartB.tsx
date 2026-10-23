@@ -1,7 +1,7 @@
 import { fig } from '../data/figures'
 import { Figure, FigureRow } from '../components/Figure'
 import { Eq, M } from '../components/Math'
-import { Callout, MarginPlate, Note, Params, Section, SubHead } from '../components/Layout'
+import { MarginPlate, Note, Params, Section, SubHead } from '../components/Layout'
 import { FrameScrubber, WipeCompare } from '../components/Interactive'
 import { UNetDiagram } from '../components/UNetDiagram'
 
@@ -59,11 +59,9 @@ export function PartB() {
           </li>
         </ul>
         <p>
-          The composed blocks just add depth: a <strong>ConvBlock</strong> is two Convs, a <strong>DownBlock</strong>{' '}
-          is a DownConv then a ConvBlock, and an <strong>UpBlock</strong> is an UpConv then a ConvBlock. The encoder
-          goes 28 → 14 → 7 → 1, the decoder comes back up, and at each resolution the decoder concatenates the
-          matching encoder features along the channel axis. Those skip connections are why the first UpBlock takes
-          4D channels and the second takes 2D. A final 3 × 3 convolution maps D channels back to one.
+          A <strong>ConvBlock</strong> is two Convs, a <strong>DownBlock</strong> is DownConv + ConvBlock, and an{' '}
+          <strong>UpBlock</strong> is UpConv + ConvBlock. The encoder goes 28 → 14 → 7 → 1, the decoder comes back
+          up, and skip connections concatenate the matching encoder features at each resolution.
         </p>
         <figure className="fig fig--wide diagram">
           <div className="diagram__frame">
@@ -78,8 +76,7 @@ export function PartB() {
           </figcaption>
         </figure>
         <p>
-          With <M>{String.raw`D = 128`}</M> the model has 7,891,073 parameters. My first sanity check passed a random
-          (4, 1, 28, 28) batch through it and confirmed the output had the same shape and only finite values.
+          With <M>{String.raw`D = 128`}</M> the model has 7,891,073 parameters.
         </p>
       </Section>
 
@@ -88,9 +85,7 @@ export function PartB() {
         <p>The goal is a one-step denoiser trained with an L2 loss on pairs of noisy and clean digits:</p>
         <Eq tag="B.1, B.2">{String.raw`\mathcal{L} = \mathbb{E}_{z,x}\,\big\lVert D_\theta(z) - x \big\rVert^2, \qquad z = x + \sigma\epsilon, \quad \epsilon \sim \mathcal{N}(0, I)`}</Eq>
         <p>
-          To see what different noise levels look like, I took the first training digit (a 5), drew one noise
-          sample with seed 180, and added it at each <M>{String.raw`\sigma`}</M>. Values are clamped to <M>{String.raw`[0, 1]`}</M> only for
-          display.
+          I took the first training digit (a 5) and added one noise sample (seed 180) at each <M>{String.raw`\sigma`}</M>.
         </p>
         <Figure
           entry={fig('b-noising-sigmas')}
@@ -116,9 +111,8 @@ export function PartB() {
           ]}
         />
         <p>
-          I noise each batch as it comes out of the shuffled training loader, so every epoch sees fresh{' '}
-          <M>{String.raw`\epsilon`}</M>. The loss is MSE between the network output and the clean digit. To compare epochs
-          fairly, I fixed ten test digits and one noise sample and reused them after epochs 1 and 5.
+          Each batch is noised as it comes out of the loader, so every epoch sees fresh <M>{String.raw`\epsilon`}</M>. I fixed
+          ten test digits and one noise sample to compare epochs 1 and 5.
         </p>
         <Figure
           entry={fig('b-denoiser-loss')}
@@ -146,10 +140,8 @@ export function PartB() {
           meta="model output · denoiser_epoch_1.png, denoiser_epoch_5.png"
         />
         <p>
-          After one epoch the outputs are already clearly digits but soft, with faint smudges around them, and the
-          1 in the third column picked up a ghost of a crossbar. After five epochs the strokes are crisper and the
-          backgrounds are clean. The 5 in the ninth column still comes out with a filled-in lower loop, though the
-          original 5 has an unusually tight loop that is hard to see under the noise.
+          After one epoch the outputs are digits but soft, with faint smudges. After five epochs the strokes are
+          crisper and the backgrounds are clean, though the 5 in the ninth column still has a filled-in loop.
         </p>
 
         <SubHead id="b-1-2-2" num="1.2.2">
@@ -173,11 +165,9 @@ export function PartB() {
           ]}
         />
         <p>
-          Up to the training level it works well. Even <M>{String.raw`\sigma = 0`}</M> is not perfect: the network slightly blurs
-          a clean input, since it never saw one. Above the training level it degrades. At <M>{String.raw`\sigma = 0.8`}</M>
-          artifacts creep in and the bottom of the stem bends. At <M>{String.raw`\sigma = 1.0`}</M> the network invents an extra
-          horizontal stroke, so the 7 starts to look like a crossed 7 or a Z, and gray specks appear in the
-          background. The error more than doubles between 0.8 and 1.0.
+          Up to the training level it works well. Above it, things degrade: at <M>{String.raw`\sigma = 0.8`}</M> the stem bends,
+          and at <M>{String.raw`\sigma = 1.0`}</M> the network adds an extra stroke so the 7 starts to look like a Z. The error
+          more than doubles from 0.8 to 1.0.
         </p>
 
         <SubHead id="b-1-2-3" num="1.2.3">
@@ -213,16 +203,13 @@ export function PartB() {
           meta="model output · pure_noise_epoch_1.png, pure_noise_epoch_5.png"
         />
         <p>
-          All ten outputs are the same blurry blob, after epoch 1 and after epoch 5, even though the ten inputs are
-          completely different. The blob looks like several digits stacked on top of each other: a 0 or 8 outline
-          with something like a 3 or 9 inside.
+          All ten outputs are the same blurry blob, even though the inputs are completely different. It looks like
+          several digits stacked on top of each other.
         </p>
         <p>
-          That is exactly what MSE asks for here. The input carries no information about which digit is the target,
-          so the best a network can do is output the one image that minimizes the expected squared distance to all
-          training digits: their pixel-wise mean, the centroid of the dataset. The loss curve agrees. It falls during
-          the first hundred or so steps while the network learns to ignore its input, then sits at about 0.067 for
-          the rest of training, because there is nothing more to learn.
+          That is what MSE asks for here. The input says nothing about which digit is the target, so the best output
+          is the pixel-wise mean of the training digits. The loss drops for the first hundred or so steps while the
+          network learns to ignore its input, then flattens at about 0.067.
         </p>
         <Note>a one-step regressor can only give you the average digit</Note>
       </Section>
@@ -241,14 +228,9 @@ export function PartB() {
         />
         <Eq tag="B.3, B.4, B.5">{String.raw`x_t = (1 - t)\,x_0 + t\,x_1, \qquad u(x_t, t) = \frac{d x_t}{dt} = x_1 - x_0, \qquad \mathcal{L} = \mathbb{E}\,\big\lVert (x_1 - x_0) - u_\theta(x_t, t) \big\rVert^2`}</Eq>
         <p>
-          One network has to handle every point on that path, and the right velocity depends on how far along we
-          are. Near <M>{String.raw`t = 0`}</M> the input is nearly pure noise and the velocity is mostly “decide on a digit”. Near{' '}
-          <M>{String.raw`t = 1`}</M> it is “clean up a few pixels”. Without <M>{String.raw`t`}</M> the network would have to guess the noise level
-          from the image itself, so I pass it in.
-        </p>
-        <p>
-          In my <code>TimeConditionalUNet</code>, <M>{String.raw`t`}</M> arrives as a vector of shape (N,), already normalized to{' '}
-          <M>{String.raw`[0, 1]`}</M>, and is reshaped to (N, 1). Two FCBlocks embed it. An FCBlock is Linear, GELU, Linear.
+          The right velocity depends on how far along the path we are, so the network gets <M>{String.raw`t`}</M> as an input.
+          In my <code>TimeConditionalUNet</code>, <M>{String.raw`t`}</M> (normalized to <M>{String.raw`[0, 1]`}</M>) is embedded by two FCBlocks
+          (Linear, GELU, Linear):
         </p>
         <ul className="op-list">
           <li>
@@ -259,10 +241,8 @@ export function PartB() {
           </li>
         </ul>
         <p>
-          Both embeddings are reshaped to (N, C, 1, 1) and broadcast over height and width, so time acts as a
-          per-channel gain on the decoder features. Everything else is the same UNet. With <M>{String.raw`D = 64`}</M> the model
-          has 1,996,417 parameters. A sanity test with two different times, <M>{String.raw`t = 0.25`}</M> and <M>{String.raw`0.75`}</M>, checked
-          the output shape and confirmed gradients reach both FCBlocks.
+          Both are broadcast over height and width, so time acts as a per-channel gain on the decoder features. With{' '}
+          <M>{String.raw`D = 64`}</M> the model has 1,996,417 parameters.
         </p>
         <figure className="fig fig--wide diagram">
           <div className="diagram__frame">
@@ -342,14 +322,9 @@ export function PartB() {
           caption="The same three checkpoints reloaded and sampled from the same noise, one row per epoch."
         />
         <p>
-          Because the starting noise is fixed, each column is the same trajectory evolving as training improves.
-          Epoch 1 is scribbles with digit-like strokes; I can maybe find a 5 and a 2. Epoch 5 has a recognizable 7,
-          3 and 2, and the rest look more like letters. By epoch 10 most columns read as digits: 8, 7, 5, 8, 9, 2,
-          3. The first and fourth columns are still blobs somewhere between a 6 and something else.
-        </p>
-        <p>
-          The layout of each column is mostly decided early, between epochs 1 and 5, and later training mainly
-          sharpens it. The results are legible but clearly worse than the class-conditioned model below.
+          The starting noise is fixed, so each column shows the same sample improving with training. Epoch 1 is
+          scribbles, epoch 5 has a recognizable 7, 3 and 2, and by epoch 10 most columns read as digits, though the
+          first and fourth are still blobs. Legible, but clearly worse than the class-conditioned model below.
         </p>
         <Note>same noise every time, the digits just get sharper</Note>
       </Section>
@@ -357,35 +332,27 @@ export function PartB() {
       {/* ------------------------------------------------------------ B 2.4 */}
       <Section id="b-2-4" num="2.4" title="Adding Class Conditioning to the UNet">
         <p>
-          For more control I also condition on the digit class. My <code>ClassConditionalUNet</code> converts the
-          label to a 10-dimensional one-hot vector inside <code>forward</code> with <code>F.one_hot</code> and embeds
-          it with two more FCBlocks, <code>fc1_c</code> (10 → 2D) and <code>fc2_c</code> (10 → D). The class scales
-          the features and time shifts them:
+          My <code>ClassConditionalUNet</code> one-hot encodes the digit label and embeds it with two more FCBlocks,{' '}
+          <code>fc1_c</code> (10 → 2D) and <code>fc2_c</code> (10 → D). The class scales the features and time shifts
+          them:
         </p>
         <Eq>{String.raw`\text{unflatten} \leftarrow c_1 \odot \text{unflatten} + t_1, \qquad \text{up}_1 \leftarrow c_2 \odot \text{up}_1 + t_2`}</Eq>
         <p>
-          To keep an unconditional mode for classifier-free guidance, the class is dropped 10% of the time during
-          training. In <code>class_fm_forward</code> I draw <code>mask = rand(N) ≥ p_uncond</code> with{' '}
-          <M>{String.raw`p_{\text{uncond}} = 0.1`}</M>, and the model multiplies the one-hot vector by the mask, so a dropped example
-          sees an all-zero class vector. One detail I noticed: <code>fc1_c</code> of a zero vector is not zero,
-          because of the biases. So “no class” is really a learned constant embedding rather than switching the
-          modulation off.
+          To keep an unconditional mode for classifier-free guidance, the class vector is zeroed 10% of the time
+          during training. At sampling time the two predictions are combined with
         </p>
-        <p>At sampling time, the unconditional prediction passes an all-zero mask, and the two are combined with</p>
         <Eq>{String.raw`u = u_u + \gamma\,(u_c - u_u), \qquad \gamma = 5`}</Eq>
         <p>
-          This is written differently from Part A's <M>{String.raw`v_c + w(v_c - v_u)`}</M>, but it is the same family:
-          rearranging gives <M>{String.raw`\gamma = w + 1`}</M>. So <M>{String.raw`\gamma = 5`}</M> here is a bit gentler than Part A's{' '}
-          <M>{String.raw`w = 7`}</M>, which corresponds to <M>{String.raw`\gamma = 8`}</M>.
+          This is Part A's formula with <M>{String.raw`\gamma = w + 1`}</M>, so <M>{String.raw`\gamma = 5`}</M> is a bit gentler than Part A's{' '}
+          <M>{String.raw`w = 7`}</M>.
         </p>
       </Section>
 
       {/* ------------------------------------------------------------ B 2.5 */}
       <Section id="b-2-5" num="2.5" title="Training the UNet">
         <p>
-          Training is the same as the time-only model plus labels: each batch provides digits and their classes,
-          and the class is randomly dropped as described above. I seeded the run with 180 so the no-scheduler
-          comparison later starts from the same weights and data order.
+          Same as the time-only model plus labels. I seeded the run with 180 so the no-scheduler run later starts
+          from the same weights and data order.
         </p>
         <Params
           items={[
@@ -412,9 +379,8 @@ export function PartB() {
           ]}
         />
         <p>
-          The curve looks much like the time-only one except for a tall spike on the very first steps. It ends lower,
-          0.0847 at epoch 10 against 0.0921 for the time-only model. Knowing the class removes a lot of the ambiguity
-          near <M>{String.raw`t = 0`}</M>: the network no longer has to decide which digit a patch of noise is heading toward.
+          It ends lower than the time-only model (0.0847 vs 0.0921), since knowing the class removes a lot of the
+          ambiguity near <M>{String.raw`t = 0`}</M>.
         </p>
       </Section>
 
@@ -437,24 +403,17 @@ export function PartB() {
           meta="model output · class_fm_scheduled_epoch_{1,5,10}_samples.png"
         />
         <p>
-          Even after one epoch every column is the right digit, which is the class conditioning doing its job. The
-          strokes are thick and noisy and some of the 5s and 8s fall apart. By epoch 5 nearly every sample is clean,
-          and epoch 10 is a bit sharper again, with more variety in slant and stroke width. A few failures remain:
-          one 5 in the fourth row is a squashed scribble.
+          Even after one epoch every column is the right digit, though the strokes are thick and some 5s and 8s fall
+          apart. By epoch 5 nearly every sample is clean, and epoch 10 is a bit sharper with more variety. One 5 in
+          the fourth row is still a squashed scribble.
         </p>
 
         <SubHead id="b-2-6-scheduler">Removing the learning rate scheduler</SubHead>
         <p>
-          The last question is whether the exponential scheduler is necessary. My no-scheduler run,{' '}
-          <code>class_fm_no_scheduler</code>, goes through the same <code>train_class_model</code> function, so
-          architecture, seed, data order, batch size, <M>{String.raw`p_{\text{uncond}}`}</M>, epoch count and sampling settings are
-          identical. The only changes are <code>use_scheduler=False</code> and the learning rate.
-        </p>
-        <p>
-          To compensate for losing the decay, I lowered the learning rate to a constant <strong>2e-3</strong> instead
-          of starting at 1e-2. Holding 1e-2 for all ten epochs would keep the most aggressive part of the schedule
-          the whole time. 2e-3 is about where the scheduled run is by epoch 8, slow enough to settle at the end,
-          while still being large enough to make progress early.
+          Is the exponential scheduler necessary? My no-scheduler run uses the same <code>train_class_model</code>{' '}
+          function, so everything matches except <code>use_scheduler=False</code> and the learning rate. Without the
+          decay I used a constant <strong>2e-3</strong> instead of 1e-2, which is about where the scheduled run is by
+          epoch 8.
         </p>
         <Figure
           entry={fig('b-scheduler-loss-comparison')}
@@ -478,9 +437,8 @@ export function PartB() {
           ]}
         />
         <p>
-          The constant run actually starts faster: 0.1426 against 0.1698 after the first epoch, since 1e-2 is a big
-          step size for a freshly initialized network. The curves cross between epochs 5 and 6, and from then on the
-          decaying rate is slightly ahead, finishing at 0.0847 against 0.0863.
+          The constant run starts faster (0.1426 vs 0.1698 after epoch 1), the curves cross between epochs 5 and 6,
+          and the scheduled run finishes slightly ahead (0.0847 vs 0.0863).
         </p>
         <FigureRow
           label="Fig. B16"
@@ -500,10 +458,8 @@ export function PartB() {
           caption="The notebook's stacked comparison: scheduled run in the top four rows, constant learning rate in the bottom four."
         />
         <p>
-          Visually the two are very close. Both produce a clean, correct digit in every cell. The scheduled run has
-          the squashed 5; the constant run has a couple of 8s with a stray hook on top. I would call the samples a
-          tie, with a small loss advantage for the scheduler. For this problem a sensibly chosen constant rate gets
-          nearly all of the way there.
+          Visually the two are very close: both give a clean, correct digit in every cell. I would call it a tie,
+          with a small loss advantage for the scheduler.
         </p>
         <WipeCompare
           pairs={[{ key: '10', before: fig('b-class-fm-epoch10'), after: fig('b-class-fm-noscheduler-epoch10') }]}
@@ -515,12 +471,6 @@ export function PartB() {
           meta="model output · class_fm_scheduled_epoch_10_samples.png vs class_fm_no_scheduler_epoch_10_samples.png"
         />
         <Note>honestly, a tie</Note>
-        <Callout title="What I did not run">
-          <p>
-            I only sampled the no-scheduler model at epoch 10. Its epoch 1 and 5 checkpoints were saved but not
-            sampled, so I cannot compare how fast the two runs became legible.
-          </p>
-        </Callout>
       </Section>
     </>
   )

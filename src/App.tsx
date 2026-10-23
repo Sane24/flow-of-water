@@ -2,26 +2,24 @@ import { useEffect } from 'react'
 import { LightboxProvider } from './components/Lightbox'
 import { Contents } from './components/Contents'
 import { loadAllImages } from './components/loadImages'
-import { useReveal } from './components/motion'
 import { AmbientField } from './components/Ambient'
 import { ForestBand } from './components/Scenes'
 import { asset } from './data/figures'
 import { ChapterOpener, Hero, Introduction, PrintHeader } from './content/Front'
 import { PartA } from './content/PartA'
 import { PartB } from './content/PartB'
-import { Observations, References } from './content/Back'
+import { Observations } from './content/Back'
 
 export default function App() {
-  useReveal()
   useEffect(() => {
-    // Lazy images keep the first load light; once the page is idle (or the moment someone
-    // prints) every figure is loaded so the PDF is never missing one.
+    // Lazy images keep the first paint light; right after it every figure starts loading so
+    // nothing pops in while scrolling, and printing never misses one.
     const onBeforePrint = () => void loadAllImages()
     window.addEventListener('beforeprint', onBeforePrint)
-    const idle = window.setTimeout(() => void loadAllImages(), 4000)
+    const soon = window.setTimeout(() => void loadAllImages(), 300)
     return () => {
       window.removeEventListener('beforeprint', onBeforePrint)
-      window.clearTimeout(idle)
+      window.clearTimeout(soon)
     }
   }, [])
 
@@ -83,7 +81,6 @@ export default function App() {
           </div>
           <ForestBand />
           <Observations />
-          <References />
         </main>
       </div>
     </LightboxProvider>

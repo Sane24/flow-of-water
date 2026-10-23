@@ -25,17 +25,12 @@ export function PartA() {
         </p>
         <Eq tag="A.1">{String.raw`x_t = (1 - t)\,\epsilon + t\,x_1, \qquad \epsilon \sim \mathcal{N}(0, I)`}</Eq>
         <p>
-          At <M>{String.raw`t = 0`}</M> the result is pure noise and at <M>{String.raw`t = 1`}</M> it is the clean image. It is not just adding
-          noise: the image term is scaled by <M>{String.raw`t`}</M> too, so at <M>{String.raw`t = 0.25`}</M> the house is a quarter-strength
-          signal sitting under three-quarter-strength noise. My implementation is one line,{' '}
-          <code>(1 - t) * noise + t * image</code>, and the notebook checks both endpoints exactly:
-          interpolating at 0 returns <M>{String.raw`\epsilon`}</M> and at 1 returns the image.
+          At <M>{String.raw`t = 0`}</M> this is pure noise and at <M>{String.raw`t = 1`}</M> it is the clean image. My implementation is one
+          line, <code>(1 - t) * noise + t * image</code>.
         </p>
         <p>
-          For Sections 1.1 through 1.5 I used my own night photo of a house instead of the Campanile. The supplied
-          preprocessing center-crops it to 512 × 512 and maps RGB to <M>{String.raw`[-1, 1]`}</M>. I sampled a single noise
-          tensor with seed 180 and reused it at all three times, so the only thing changing across the row is{' '}
-          <M>{String.raw`t`}</M>.
+          For 1.1 to 1.5 I used my own night photo of a house instead of the Campanile, center-cropped to 512 × 512.
+          One noise tensor (seed 180) is reused at all three times, so only <M>{String.raw`t`}</M> changes across the row.
         </p>
         <Params
           items={[
@@ -56,9 +51,9 @@ export function PartA() {
           meta={<Meta entry={fig('a11-nighthouse-t0.25')} />}
         />
         <p>
-          At <M>{String.raw`t = 0.25`}</M> the photo is almost all static. I can only find a lighter patch where the moon is and a
-          faint warm spot from the lit window. By <M>{String.raw`t = 0.5`}</M> the roofline, the trees and the fence are readable.
-          At <M>{String.raw`t = 0.75`}</M> everything is there, just grainy.
+          At <M>{String.raw`t = 0.25`}</M> the photo is almost all static, with only the moon and the lit window showing through. By{' '}
+          <M>{String.raw`t = 0.5`}</M> the roofline, trees and fence are readable, and at <M>{String.raw`t = 0.75`}</M> everything is there,
+          just grainy.
         </p>
         <InterpolationPlayground entry={fig('a11-nighthouse-original')} />
       </Section>
@@ -66,22 +61,15 @@ export function PartA() {
       {/* ------------------------------------------------------------ 1.2 */}
       <Section id="a-1-2" num="1.2" title="Classical Denoising">
         <p>
-          Before using the model, I tried the obvious baseline: blur the noise away. Since the image inside{' '}
-          <M>{String.raw`x_t`}</M> is scaled down by <M>{String.raw`t`}</M>, I first divide by <M>{String.raw`t`}</M> to restore its brightness, then apply a
-          Gaussian filter <M>{String.raw`G_\sigma`}</M>:
+          Before using the model, I tried the obvious baseline: blur the noise away. The image inside{' '}
+          <M>{String.raw`x_t`}</M> is scaled down by <M>{String.raw`t`}</M>, so I divide by <M>{String.raw`t`}</M> first and then apply a Gaussian
+          filter <M>{String.raw`G_\sigma`}</M>:
         </p>
         <Eq>{String.raw`\frac{x_t}{t} = x_1 + \frac{1 - t}{t}\,\epsilon, \qquad \hat{x}_1^{\text{blur}} = G_\sigma\!\left(\frac{x_t}{t}\right)`}</Eq>
         <p>
-          The division only fixes the amplitude. It scales the noise up by the same factor, so at{' '}
-          <M>{String.raw`t = 0.25`}</M> the noise term is three times as strong as the image. Averaging nearby pixels cancels
-          some of that independent noise, but it averages away edges too.
-        </p>
-        <p>
-          The notebook sweeps <M>{String.raw`\sigma \in \{1, 2, 4, 8, 16\}`}</M> and keeps the one with the lowest MSE against the
-          clean image. That is a little unfair to the real world (a real denoiser would not know the clean image),
-          but it shows the best this baseline can do. The winners were <M>{String.raw`\sigma = 16`}</M> at <M>{String.raw`t = 0.25`}</M>,{' '}
-          <M>{String.raw`\sigma = 4`}</M> at <M>{String.raw`t = 0.5`}</M>, and <M>{String.raw`\sigma = 1`}</M> at <M>{String.raw`t = 0.75`}</M>. That ordering makes sense:
-          the noisier the input, the wider the blur has to be before removing noise beats destroying detail.
+          I swept <M>{String.raw`\sigma \in \{1, 2, 4, 8, 16\}`}</M> and kept the lowest MSE against the clean image:{' '}
+          <M>{String.raw`\sigma = 16`}</M> at <M>{String.raw`t = 0.25`}</M>, <M>{String.raw`\sigma = 4`}</M> at <M>{String.raw`t = 0.5`}</M>, and <M>{String.raw`\sigma = 1`}</M> at{' '}
+          <M>{String.raw`t = 0.75`}</M>. Noisier inputs need wider blurs, which also wipe out more edges.
         </p>
         <FigureRow
           label="Fig. A2"
@@ -98,10 +86,8 @@ export function PartA() {
           meta="baseline output · blur_0.25.png, blur_0.5.png, blur_0.75.png"
         />
         <p>
-          At <M>{String.raw`t = 0.25`}</M> the best blur is colored blobs: the moon is a smear and the house is a warm patch. At{' '}
-          <M>{String.raw`t = 0.5`}</M> the shapes come back but the windows and fence turn to mush. At <M>{String.raw`t = 0.75`}</M> the{' '}
-          <M>{String.raw`\sigma = 1`}</M> result looks fine at a glance and still has visible grain, because any more blur would
-          have cost more error at the edges than it saved in the flat regions.
+          At <M>{String.raw`t = 0.25`}</M> the best blur is colored blobs. At <M>{String.raw`t = 0.5`}</M> the shapes come back but the windows
+          and fence turn to mush, and at <M>{String.raw`t = 0.75`}</M> it looks fine at a glance but still has grain.
         </p>
       </Section>
 
@@ -113,10 +99,6 @@ export function PartA() {
           recover the image in one jump:
         </p>
         <Eq tag="A.2">{String.raw`\hat{x}_1 = x_t + (1 - t)\, v_\theta(x_t, t, c), \qquad c = \text{“a high quality photo”}`}</Eq>
-        <p>
-          Before trusting it I checked that the returned velocity had the same shape, dtype and device as the input
-          and contained no NaNs. Then I ran exactly one prediction on each of the three saved noisy images.
-        </p>
         <FigureRow
           label="Fig. A3"
           columns={7}
@@ -133,15 +115,13 @@ export function PartA() {
           meta="model output · one_step_0.25.png, one_step_0.5.png, one_step_0.75.png"
         />
         <p>
-          This is a huge jump over the blur. At <M>{String.raw`t = 0.25`}</M> the estimate is a believable night scene with a
-          moon, trees and a lit house, but it is not my house. The left gable and porch are gone, the facade is
-          simplified into a generic two-story box, and the edges are smeared sideways like a long exposure. At{' '}
-          <M>{String.raw`t = 0.5`}</M> the structure is correct: roofline, chimney, the bright doorway and the fence, with fine
-          texture smoothed away, especially in the clouds. At <M>{String.raw`t = 0.75`}</M> it is very close to the original.
+          Much better than the blur. At <M>{String.raw`t = 0.25`}</M> it is a believable night scene, but not my house: the left
+          gable and porch are gone and the edges are smeared sideways. At <M>{String.raw`t = 0.5`}</M> the structure is right with
+          fine texture smoothed away, and at <M>{String.raw`t = 0.75`}</M> it is very close to the original.
         </p>
         <p>
-          The smoothness is expected. With one step, the best the model can do under a squared-error objective is
-          predict the average of every clean image consistent with the noisy input, and averages are blurry.
+          The smoothness makes sense. With one step and a squared-error loss, the best guess is the average of every
+          clean image that fits the noisy input, and averages are blurry.
         </p>
       </Section>
 
@@ -155,12 +135,8 @@ export function PartA() {
         <p>The error heatmap is the RMS difference across RGB at each pixel, computed before any display scaling:</p>
         <Eq>{String.raw`E_t = \sqrt{\operatorname{mean}_{\text{RGB}}\!\Big(\big[(1 - t)(\hat{v}_t - v_{\text{gt}})\big]^2\Big)}`}</Eq>
         <p>
-          My <code>velocity_diagnostics</code> function returns both updates with shape (B, 3, H, W) and the error
-          map with shape (B, H, W), averaging only over the channel dimension. Both updates are drawn on one shared
-          symmetric RGB scale with zero at middle gray, which is why they look like faded photos. The error maps
-          use a linear scale with <code>vmin = 0</code> and the same <code>vmax</code> (the largest error over all
-          three times) in every panel, so the three heatmaps can be compared directly. The figures below are the
-          unmodified notebook plots.
+          Both updates share one symmetric color scale with zero at middle gray, and all three error maps use the
+          same <code>vmax</code> so they can be compared directly.
         </p>
         <Figure
           entry={fig('a14-original')}
@@ -178,15 +154,13 @@ export function PartA() {
           />
         ))}
         <p>
-          At <M>{String.raw`t = 0.25`}</M> the error is concentrated on edges: the outline of the house, the window frames, the
-          tree crowns and the individual fence pickets. The flat sky stays dark. The predicted update is also
-          visibly softer than the ground truth, which contains every board of the siding. That matches what I saw in
-          1.3: the model gets the low-frequency layout right and is unsure where exactly the edges go.
+          At <M>{String.raw`t = 0.25`}</M> the error sits on edges: the house outline, window frames, tree crowns and fence
+          pickets, while the flat sky stays dark. The predicted update is also softer than the ground truth, so the
+          model gets the layout right but is unsure exactly where the edges go.
         </p>
         <p>
-          As <M>{String.raw`t`}</M> grows the heatmaps get darker overall. Part of that is the <M>{String.raw`(1 - t)`}</M> factor shrinking the
-          update, and part is that there is simply less left to guess. At <M>{String.raw`t = 0.75`}</M> only a faint trace of the
-          edges remains.
+          As <M>{String.raw`t`}</M> grows the heatmaps get darker, partly from the <M>{String.raw`(1 - t)`}</M> factor and partly because there
+          is less left to guess.
         </p>
       </Section>
 
@@ -198,12 +172,8 @@ export function PartA() {
         </p>
         <Eq tag="A.3">{String.raw`x_{t+h} = x_t + h\, v_\theta(x_t, t, c), \qquad h = 0.02`}</Eq>
         <p>
-          My <code>euler_sample</code> recomputes the velocity at every step, shortens the last step with{' '}
-          <code>h = min(step_size, 1 - t)</code> so it lands exactly on <M>{String.raw`t = 1`}</M>, and saves the starting state,
-          every fifth update, and the final state. The notebook tests it on a constant velocity field from{' '}
-          <M>{String.raw`t = 0`}</M>, <M>{String.raw`0.5`}</M> and <M>{String.raw`0.93`}</M>, expecting 50, 25 and 4 calls (the last one needs a shortened
-          step) and an endpoint of exactly <M>{String.raw`1 - t_{\text{start}}`}</M>. All three passed. Starting from the saved{' '}
-          <M>{String.raw`t = 0.5`}</M> input takes 25 updates.
+          My <code>euler_sample</code> recomputes the velocity every step and shortens the last step so it lands
+          exactly on <M>{String.raw`t = 1`}</M>. Starting from the <M>{String.raw`t = 0.5`}</M> input takes 25 updates.
         </p>
         <FrameScrubber
           label="Fig. A8"
@@ -229,14 +199,10 @@ export function PartA() {
           meta="comparison.png"
         />
         <p>
-          The trajectory clears up gradually. By <M>{String.raw`t = 0.8`}</M> the house and trees are crisp and only the sky still
-          has grain. The final image is much sharper than the one-step estimate: the clouds have texture again and
-          the siding and fence have real edges.
-        </p>
-        <p>
-          It is also not quite my house. A small red object appears near the top of the middle tree around{' '}
-          <M>{String.raw`t = 0.6`}</M> and stays to the end, the tree on the right changes shape, and a couple of windows shift.
-          The sampler committed to specific details that look plausible but were not in the photo.
+          The final image is much sharper than the one-step estimate: the clouds have texture again and the siding
+          and fence have real edges. It is also not quite my house. A small red object shows up in the middle tree
+          around <M>{String.raw`t = 0.6`}</M> and a couple of windows shift, so the sampler committed to details that look
+          plausible but were not in the photo.
         </p>
       </Section>
 
@@ -255,15 +221,10 @@ export function PartA() {
           meta="model output · conditional_0.png … conditional_4.png"
         />
         <p>
-          Every single one is a person. Not a landscape, not an object: five portraits, mostly head and shoulders
-          against a plain wall. I did not expect the generic prompt to be this biased, but a lot of photos labeled
-          as high quality are probably portraits, and that preference shows up again in Section 3.1.
-        </p>
-        <p>
-          The quality is mixed. Seeds 182 and 184 are believable. Seed 180 has a face that dissolves into skin with
-          no features, seed 183 is a distorted face with a melted mustache, and the torso in seed 181 has strange
-          rippled texture. Without guidance the model seems to hedge between several possibilities at once, and the
-          result can be anatomically mushy.
+          Every one is a person: five portraits, mostly head and shoulders against a plain wall. I did not expect
+          the generic prompt to be this biased, and it shows up again in 3.1. Quality is mixed. Seeds 182 and 184 are
+          believable, but seed 180's face has no features, seed 183 has a melted mustache, and seed 181's torso has
+          strange rippled texture.
         </p>
       </Section>
 
@@ -275,11 +236,7 @@ export function PartA() {
           away from the unconditional one:
         </p>
         <Eq tag="A.4">{String.raw`v_{\text{cfg}} = v_c + w\,(v_c - v_u), \qquad w = 7`}</Eq>
-        <p>
-          With <M>{String.raw`w = 0`}</M> this reduces to ordinary conditional sampling, and the notebook asserts that exactly.
-          Each Euler step now costs two model calls. I reused the same five starting noises from 1.6 so the
-          comparison is one to one.
-        </p>
+        <p>I reused the same five starting noises from 1.6 so the comparison is one to one.</p>
         <FigureRow
           label="Fig. A11"
           columns={5}
@@ -288,19 +245,23 @@ export function PartA() {
           meta="model output · cfg_0.png … cfg_4.png"
         />
         <p>
-          Same starting points, completely different reliability. All five are clean, sharp studio portraits:
-          centered faces, even lighting, plain backgrounds, most of them smiling at the camera. The featureless face
-          from seed 180 becomes a normal young man, and the distorted face from seed 183 becomes a well-lit
-          portrait. Seed 182 kept the raised hand from its unguided version, so the noise still controls the
-          composition.
+          Same starting points, much more reliable. All five are clean studio portraits with centered faces and
+          even lighting. The featureless face from seed 180 becomes a normal young man, and seed 182 keeps its raised
+          hand, so the noise still controls the composition.
         </p>
         <p>
-          The cost is variety. Without guidance the set had different crops, a shirtless torso, and both warm and
-          cool palettes. With <M>{String.raw`w = 7`}</M> they look like five shots from the same photographer: same framing, same
-          pose, higher contrast, slightly oversaturated skin. Guidance pulls every sample toward the most
-          prompt-like answer, which here means a stock headshot.
+          The cost is variety. With <M>{String.raw`w = 7`}</M> they look like five shots from the same photographer: same framing,
+          same pose, higher contrast. Guidance pulls every sample toward the most prompt-like answer, which here is a
+          stock headshot.
         </p>
       </Section>
+
+      {/* ------------------------------------------------------------ creative applications */}
+      <header id="creative" className="part-break flow" data-toc>
+        <p className="eyebrow">Part A · section 3</p>
+        <h2 className="part-break__title">Creative applications</h2>
+        <p>Same sampler, used to edit images and make illusions.</p>
+      </header>
 
       {/* ------------------------------------------------------------ 3.1 */}
       <Section id="a-3-1" num="3.1" title="Image-to-Image Editing" ambient="forest" motif={<Frog title="Keroppi-style frog doodle" />}>
@@ -316,9 +277,7 @@ export function PartA() {
         </p>
         <Eq>{String.raw`x_{t_{\text{start}}} = (1 - t_{\text{start}})\,\epsilon + t_{\text{start}}\,x_1 \;\longrightarrow\; \text{Euler with } v_{\text{cfg}} \text{ from } t_{\text{start}} \text{ to } 1`}</Eq>
         <p>
-          A small <M>{String.raw`t_{\text{start}}`}</M> leaves almost nothing of the input, so the model has a lot of freedom. A
-          large one keeps most of it. Starting at 0.02 takes 49 steps and starting at 0.50 takes 25. Everything in
-          this section uses the prompt “a high quality photo”, <M>{String.raw`w = 7`}</M> and <M>{String.raw`h = 0.02`}</M>.
+          A small <M>{String.raw`t_{\text{start}}`}</M> leaves the model a lot of freedom, and a large one keeps most of the input.
         </p>
         <Params
           items={[
@@ -333,9 +292,7 @@ export function PartA() {
           see the original notebook figure.
         </p>
         <p>
-          One pattern shows up across almost every subject: at <M>{String.raw`t = 0.02`}</M>, the night house, the eye, the orange
-          cat, Malfoy, Keroppi and the Jeanne crop all turned into portraits of a person. That is the same bias from 1.6.
-          With almost no information left, the model falls back on its favorite kind of “high quality photo”.
+          At <M>{String.raw`t = 0.02`}</M> almost every subject turned into a portrait of a person, the same bias as in 1.6.
         </p>
 
         <SubHead>The Campanile and my two photos</SubHead>
@@ -371,9 +328,8 @@ export function PartA() {
           kicker="my own drawings"
           intro={
             <p>
-              These are my own drawings. They are flat, with clean lines and almost none of the texture of a photo,
-              which makes the editing easy to read: at low starting times the model throws the drawing away, and
-              somewhere in the middle it tries to turn it into a photograph.
+              My own drawings. They are flat with clean lines, so it is easy to see where the model throws the
+              drawing away and where it tries to turn it into a photo.
             </p>
           }
         >
@@ -394,9 +350,8 @@ export function PartA() {
 
           <p className="sketchbook__note">Jeanne, twice</p>
           <p>
-            The preprocessing center-crops to a square, which cut off the top of my Jeanne drawing, so I ran the
-            drawing twice: once with the default crop and once padded to a square with a light pink border using{' '}
-            <code>ImageOps.pad</code>.
+            The center crop cut off the top of my Jeanne drawing, so I also ran it padded to a square with a light
+            pink border.
           </p>
           <EditTimeline section="3.1" group="jeanne" title="Jeanne, center crop" kicker="my drawing" label="Fig. A18" initial="0.14" extra />
           <p>
@@ -418,12 +373,9 @@ export function PartA() {
       {/* ------------------------------------------------------------ 3.2 */}
       <Section id="a-3-2" num="3.2" title="Text-Guided Image Editing" ambient="forest">
         <p>
-          Same procedure, same seven starting times, but the generic prompt is replaced with my own. The exact
-          prompt strings from the notebook are printed above each sweep.
-        </p>
-        <p>
-          With a small <M>{String.raw`t_{\text{start}}`}</M> the prompt wins outright; with a large one the original wins. The
-          results I care about are in between, where the prompt has to work with the original's layout.
+          Same procedure and starting times, but with my own prompts (printed above each sweep). With a small{' '}
+          <M>{String.raw`t_{\text{start}}`}</M> the prompt wins outright and with a large one the original wins, so the interesting
+          results are in between.
         </p>
         <EditTimeline
           section="3.2"
@@ -467,9 +419,9 @@ export function PartA() {
           highlight from the original photo. At 0.50 there are only a few star specks in a normal iris.
         </p>
         <p>
-          So the strength of an edit is not only about <M>{String.raw`t_{\text{start}}`}</M>. A prompt that fits the original's
-          structure (a galaxy inside a round iris) survived to a higher starting time than one that needs a
-          different silhouette (a tall mansion in place of a low bungalow).
+          So edit strength is not only about <M>{String.raw`t_{\text{start}}`}</M>. A prompt that fits the original's shape (a
+          galaxy in a round iris) lasted longer than one that needs a different silhouette (a tall mansion on a low
+          house).
         </p>
       </Section>
 
@@ -499,10 +451,8 @@ export function PartA() {
         </p>
         <Eq>{String.raw`v_1 = v_{\text{cfg}}(x_t, t, p_1), \qquad v_2 = F\big(v_{\text{cfg}}(F(x_t), t, p_2)\big), \qquad v = \tfrac{1}{2}(v_1 + v_2)`}</Eq>
         <p>
-          <M>{String.raw`F`}</M> is a 180° rotation, which flips both spatial axes (<code>torch.flip(x, (-2, -1))</code>), not
-          just a vertical mirror. Since <M>{String.raw`F`}</M> is its own inverse, the notebook checks{' '}
-          <M>{String.raw`F(F(x)) = x`}</M>. Each anagram starts from pure noise and takes 50 Euler steps, with four model calls per
-          step (two prompts, each conditional and unconditional). These are the four I picked.
+          <M>{String.raw`F`}</M> is a 180° rotation (<code>torch.flip(x, (-2, -1))</code>). Each anagram starts from pure noise and
+          takes 50 Euler steps. These are the four I picked.
         </p>
         <p className="screen-only reading-hint">Use the turn button on each artwork. The pair underneath is the two saved files.</p>
         <div className="anagram-list">
@@ -527,9 +477,8 @@ export function PartA() {
               become two smaller rocks. Rotating it actually changes what I notice first.
             </p>
             <p>
-              Two honest caveats: the cat is not really black, it is deep ocean blue, because the prompts had to
-              agree on one palette and the water won. And the ocean side reads more as rocks in dark water than
-              as waves crashing.
+              The cat came out deep blue instead of black since both prompts had to share one palette, and the ocean
+              side reads more as rocks in dark water than crashing waves.
             </p>
           </AnagramViewer>
           <AnagramViewer group="volcano-wine" index="iv" name="Erupting volcano ↔ glass of red wine" label="Fig. A26" reverse>
@@ -568,11 +517,9 @@ export function PartA() {
         </p>
         <Eq>{String.raw`v_{\text{hybrid}} = \operatorname{LP}(v_a) + v_b - \operatorname{LP}(v_b)`}</Eq>
         <p>
-          <M>{String.raw`\operatorname{LP}`}</M> is the provided Gaussian low-pass with <M>{String.raw`\sigma = 16`}</M> and a 265 × 265 kernel at
-          512 × 512. The first prompt, <M>{String.raw`a`}</M>, controls the coarse layout you see from far away. The second,{' '}
-          <M>{String.raw`b`}</M>, supplies the fine detail you see up close. Filtering the velocity rather than the finished image
-          means the sampler keeps steering the composition toward <M>{String.raw`a`}</M> at every step while letting <M>{String.raw`b`}</M> paint
-          the texture. The distant view is the 64 × 64 Lanczos downsample the notebook displays.
+          <M>{String.raw`\operatorname{LP}`}</M> is the provided Gaussian low-pass (<M>{String.raw`\sigma = 16`}</M>, 265 × 265 kernel). Prompt{' '}
+          <M>{String.raw`a`}</M> sets the layout you see from far away and prompt <M>{String.raw`b`}</M> supplies the detail up close. The far
+          view is the 64 × 64 downsample from the notebook.
         </p>
         <p className="screen-only reading-hint">
           Drag “viewing distance” to step back from each image. At the far end the slider swaps in the saved 64 × 64
@@ -627,29 +574,20 @@ export function PartA() {
           </HybridViewer>
           <HybridViewer group="face-clockwork-revised" index="vi" name="Face × clockwork, revised prompts" label="Fig. A32" compact>
             <p>
-              The revised run replaced both prompts. Up close it is now nothing but gears. From far away I still
-              cannot find a face.
+              The revised run replaced both prompts. Up close it is all gears now, and from far away the face is
+              still there, just fainter.
             </p>
           </HybridViewer>
         </div>
         <p>
-          I tried making the clockwork prompt more specific because I could still see the human face too clearly at
-          full resolution. The gears were there, but they were not nearly as prominent as I wanted. For the second
-          run I asked for “hundreds of interlocking clockwork gears and cogwheels filling the entire frame”, and I
-          simplified the face prompt to “simple features, broad smooth shadows” so its low frequencies would be easy
-          to hide under texture.
+          In the first run the face was too clear up close and the gears were not as prominent as I wanted, so for
+          the second run I asked for “hundreds of interlocking clockwork gears and cogwheels filling the entire
+          frame” and simplified the face prompt to “simple features, broad smooth shadows”.
         </p>
         <p>
-          It overshot. The gears are everywhere now, and up close they look great, but I cannot find the face at any
-          size. Even the 64 × 64 view is a column of gears on white. If I squint, the lone gear on the right and the
-          cluster on the left sit roughly where eyes might go, but that is me looking for it. My guess is that
-          “filling the entire frame” fights the face directly: it asks for dark structure everywhere, including the
-          low frequencies, instead of sitting on top of the face's layout.
-        </p>
-        <p>
-          One caveat: the revised run also used a different seed (190 instead of 182), so I cannot fully separate the
-          prompt change from the noise change. To really answer whether more gears helps, I would rerun both prompt
-          versions on the same seed. Of the two, the first run is the better hybrid.
+          Up close the gears are everywhere now and look great. From far away I can still see the face, not as
+          clearly as in the first run, but it still works pretty well. I like them both for different reasons: the
+          first is the stronger face and the second is the better clockwork.
         </p>
       </Section>
     </>
