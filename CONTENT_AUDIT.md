@@ -13,10 +13,10 @@ Checklist built from the Fall 2026 Part A and Part B assignment pages, mapped to
 | 1.5 | `euler_sample`; trajectory from t = 0.5 (start, every fifth update, final); comparison with blur and one-step | Figs. A8, A9, logged MSE values |
 | 1.6 | Five samples from noise, "a high quality photo" | Fig. A10, seeds 180 to 184 |
 | 2.1 | `cfg_velocity`; five CFG samples (w = 7) from the same noises, compared | Fig. A11 |
-| 3.1 | Campanile + two own images at seven starting times; one web image + two drawings at seven starting times | Figs. A12 to A17; extras A18 to A20 (Jeanne x2, Malfoy crop) |
-| 3.2 | Campanile + two own images with own prompts, seven starting times, prompts shown | Figs. A21 to A23, exact prompt strings from the notebook |
-| 3.3 | `visual_anagrams`; two illusions, upright and rotated, both prompts | Four featured (Figs. A24 to A27) plus two failed pairs (Fig. A28) |
-| 3.4 | `make_hybrids`; two hybrids at full and reduced size, both prompts | Six (Figs. A29 to A34), each with the 512 × 512 and 64 × 64 views |
+| 3.1 | Campanile + two own images at seven starting times; one web image + two drawings at seven starting times | Figs. A12 to A17 (drawings: Malfoy, using the cropped `malfoy-c.png` run, and Keroppi); extras A18, A19 (Jeanne, two crops) |
+| 3.2 | Campanile + two own images with own prompts, seven starting times, prompts shown | Figs. A20 to A22, exact prompt strings from the notebook |
+| 3.3 | `visual_anagrams`; two illusions, upright and rotated, both prompts | Four illusions (Figs. A23 to A26) |
+| 3.4 | `make_hybrids`; two hybrids at full and reduced size, both prompts | Six (Figs. A27 to A32), each with the 512 × 512 and 64 × 64 views |
 
 ## Part B deliverables
 
@@ -43,6 +43,7 @@ Checklist built from the Fall 2026 Part A and Part B assignment pages, mapped to
 - **Volcano and wine anagram.** Run in its own cell with seed 190 (SEED + 10).
 - **Night house editing output.** In notebook cell 27 the displayed figure for `my_image_1` is missing from the saved outputs, but `edit_my_image_1.png` exists in the run folder and is displayed by cell 28.
 - **Null condition in `edit`.** `edit` calls `cfg_velocity` without passing the encoded `null_condition`, so the unconditional branch receives the default empty string `''` rather than `model.encode("")`. The cell ran without errors, so the provided `predict_velocity` presumably accepts a raw string, but I could not confirm that from the saved files. Anagrams and hybrids pass the encoded null condition explicitly.
+- **Runs left off the site.** The first Malfoy edit (`edit_drawing_1.png`, uncropped `malfoy.png`) and the eye/moonlit sky and hourglass/beach anagrams (`anagram_3`, `anagram_4`) were run but are not shown, by choice.
 - **Unused inputs.** `blackcat.jpeg`, `blackcat2.jpg`, `oceanbeach.jpg`, `oceanwave.jpg` and `hourglass.jpg` were uploaded to the Kaggle dataset but no notebook cell loads them (anagrams and hybrids are generated from text only). They are not shown on the site.
 - **Observations.** Descriptions of what each figure shows were written from looking at the saved images. Numbers (losses, MSE, parameter counts, learning rates) are copied from notebook output.
 - **Author line.** The site credits "Sampurn Bhowmick", taken from the local git configuration and the Kaggle dataset path.
