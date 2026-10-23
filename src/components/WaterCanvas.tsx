@@ -142,35 +142,109 @@ export function WaterCanvas({ className = '' }: { className?: string }) {
   return <canvas ref={ref} className={className} aria-hidden="true" />
 }
 
-/** Falling water for the chapter break between Part A and Part B. */
+/**
+ * Falling water for the chapter break between Part A and Part B: a ledge of dark rock, a
+ * curtain of water that arcs over the lip and drops, and a pool of ripples at the bottom.
+ */
 export function WaterfallCanvas({ className = '' }: { className?: string }) {
   const ref = useCanvasLoop((ctx, w, h, time) => {
     ctx.clearRect(0, 0, w, h)
-    const cols = Math.max(24, Math.round(w / 9))
+    const lip = h * 0.17
+    const pool = h * 0.8
+    const bandL = w * 0.26
+    const bandR = w * 0.74
+    const mid = (bandL + bandR) / 2
+
+    // cliff walls on either side of the fall
+    const rock = (side: 1 | -1) => {
+      ctx.beginPath()
+      const edge = side === -1 ? bandL - 6 : bandR + 6
+      const outer = side === -1 ? 0 : w
+      ctx.moveTo(outer, 0)
+      for (let i = 0; i <= 14; i++) {
+        const y = (i / 14) * pool
+        // jagged edge that recedes slightly away from the water toward the bottom
+        const jag = (hash(i * 3 + (side === -1 ? 0 : 50)) - 0.5) * 16
+        ctx.lineTo(edge + jag + side * (y / pool) * 22, y)
+      }
+      ctx.lineTo(outer, pool)
+      ctx.closePath()
+      ctx.fillStyle = 'rgba(6, 20, 26, 0.85)'
+      ctx.fill()
+    }
+    rock(-1)
+    rock(1)
+
+    // the ledge the water pours over
+    ctx.beginPath()
+    ctx.moveTo(bandL - 30, 0)
+    ctx.lineTo(bandR + 30, 0)
+    for (let i = 12; i >= 0; i--) {
+      const x = bandL - 30 + ((bandR - bandL + 60) * i) / 12
+      ctx.lineTo(x, lip - 10 + (hash(i + 200) - 0.5) * 8)
+    }
+    ctx.closePath()
+    ctx.fillStyle = 'rgba(6, 20, 26, 0.9)'
+    ctx.fill()
+
+    // water curtain
+    const cols = Math.max(26, Math.round((bandR - bandL) / 4.5))
     for (let c = 0; c < cols; c++) {
-      const x = (c + 0.5) * (w / cols) + (hash(c) - 0.5) * 6
-      // the fall is densest in the middle third
-      const center = 1 - Math.abs(x / w - 0.5) * 2
-      const strength = Math.pow(Math.max(0, center), 0.8)
-      if (strength < 0.06) continue
-      const speed = 120 + hash(c + 9) * 160
-      const dashes = 3 + Math.round(hash(c + 3) * 3)
-      ctx.lineWidth = 0.6 + strength * 1.1
+      const u = c / (cols - 1)
+      const x0 = bandL + (bandR - bandL) * u + (hash(c) - 0.5) * 3
+      const strength = 0.45 + 0.55 * Math.sin(Math.PI * u)
+      const push = (x0 - mid) * 0.06
+      const speed = 150 + hash(c + 9) * 140
+      const dashes = 4 + Math.round(hash(c + 3) * 3)
+      ctx.lineWidth = 0.6 + strength
       for (let k = 0; k < dashes; k++) {
-        const len = 30 + hash(c * 7 + k) * 90
-        const period = h + len + 40
-        const y = ((time * speed + hash(c * 13 + k) * period) % period) - len
-        const sway = Math.sin((y / h) * 3 + c) * 2
-        const grad = ctx.createLinearGradient(0, y, 0, y + len)
-        const a = 0.12 + 0.4 * strength
+        const len = 26 + hash(c * 7 + k) * 80
+        const span = pool - lip
+        const period = span + len
+        const y = lip + ((time * speed + hash(c * 13 + k) * period) % period) - len * 0.5
+        const y1 = Math.max(lip - 4, y)
+        const y2 = Math.min(pool, y + len)
+        if (y2 <= y1) continue
+        // water leaves the lip with a little forward arc, then drops straight
+        const xAt = (yy: number) => x0 + push * (1 - Math.exp(-(yy - lip) / 26)) + Math.sin(yy * 0.02 + c) * 0.8
+        const grad = ctx.createLinearGradient(0, y1, 0, y2)
+        const a = 0.14 + 0.5 * strength
         grad.addColorStop(0, 'rgba(207, 226, 220, 0)')
         grad.addColorStop(1, `rgba(237, 244, 239, ${a})`)
         ctx.strokeStyle = grad
         ctx.beginPath()
-        ctx.moveTo(x, y)
-        ctx.lineTo(x + sway, y + len)
+        ctx.moveTo(xAt(y1), y1)
+        ctx.lineTo(xAt(y2), y2)
         ctx.stroke()
       }
+    }
+
+    // foam along the lip
+    ctx.strokeStyle = 'rgba(237, 244, 239, 0.55)'
+    ctx.lineWidth = 1.4
+    ctx.beginPath()
+    for (let x = bandL; x <= bandR; x += 4) {
+      const y = lip - 3 + Math.sin(x * 0.15 + time * 3) * 1.2
+      if (x === bandL) ctx.moveTo(x, y)
+      else ctx.lineTo(x, y)
+    }
+    ctx.stroke()
+
+    // pool: ripples spreading out from where the water lands
+    for (let r = 0; r < 7; r++) {
+      const d = r / 6
+      const y = pool + 6 + d * (h - pool - 10)
+      const spread = (bandR - bandL) * (0.6 + d * 1.1)
+      ctx.beginPath()
+      for (let x = mid - spread; x <= mid + spread; x += 5) {
+        const fade = 1 - Math.abs(x - mid) / spread
+        const yy = y + Math.sin(x * (0.05 - d * 0.02) - time * (1.6 - d * 0.6) + r) * (1 + d * 2.5) * fade
+        if (x === mid - spread) ctx.moveTo(x, yy)
+        else ctx.lineTo(x, yy)
+      }
+      ctx.strokeStyle = `rgba(207, 226, 220, ${0.32 - d * 0.2})`
+      ctx.lineWidth = 0.8
+      ctx.stroke()
     }
   })
   return <canvas ref={ref} className={className} aria-hidden="true" />
