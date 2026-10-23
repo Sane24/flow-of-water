@@ -195,12 +195,11 @@ EDITS = [
     ("edit_my_image_1", "nighthouse", "Night house (my photo)", "nighthouse.png", "my night photo of a house"),
     ("edit_my_image_2", "eye", "Eye close-up (my photo)", "eye-close.jpg", "my macro photo of an eye"),
     ("edit_web_image", "orange-cat", "Orange cat (web image)", "cat.jpg", "a downloaded photo of an orange cat"),
-    ("edit_drawing_1", "malfoy", "Malfoy (my drawing)", "malfoy.png", "my drawing of a blonde Slytherin student"),
     ("edit_drawing_2", "keroppi", "Keroppi (my drawing)", "keroppi.png", "my pencil drawing of Keroppi the frog"),
     ("edit_drawing_3", "jeanne", "Jeanne, center crop (extra)", "Vampire Jeanne.png", "my line drawing of Jeanne"),
     ("edit_jeanne_full", "jeanne-full", "Jeanne, padded to square (extra)", "jeanne_square.png",
      "my Jeanne drawing padded to a square"),
-    ("edit_malfoy_c", "malfoy-crop", "Malfoy, tighter crop (extra)", "malfoy-c.png", "a tighter crop of my Malfoy drawing"),
+    ("edit_malfoy_c", "malfoy", "Malfoy (my drawing)", "malfoy-c.png", "my drawing of a blonde Slytherin student"),
 ]
 
 TEXT_EDITS = [
@@ -246,10 +245,6 @@ ANAGRAMS = [
      "an oil painting of foamy ocean waves crashing on rocks", True),
     ("volcano_wine", "volcano-wine", 190, "an oil painting of an erupting volcano with glowing red lava",
      "an oil painting of a crystal wine glass filled with red wine", True),
-    ("3", "eye-moon", 183, "a surreal painting of a giant human eye",
-     "a surreal painting of a moonlit sky filled with swirling clouds", False),
-    ("4", "hourglass-beach", 184, "a painting of an antique hourglass filled with sand",
-     "a painting of golden sand and ocean waves on a beach", False),
 ]
 
 HYBRIDS = [
