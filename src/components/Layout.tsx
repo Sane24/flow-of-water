@@ -4,6 +4,33 @@ import { asset } from '../data/figures'
 export const LIVE_URL = 'https://sane24.github.io/flow-of-water/'
 export const REPO_URL = 'https://github.com/Sane24/flow-of-water'
 
+/** My other CS180 project pages, in order. */
+export const PROJECTS = [
+  { num: 'P0', name: 'Brand New Zoom', href: 'https://sane24.github.io/Brand-New-Zoom/' },
+  { num: 'P1', name: 'Russian Doll Pyramid', href: 'https://sane24.github.io/Russian-Doll-Pyramid/' },
+  { num: 'P2', name: 'Twilight Filter', href: 'https://sane24.github.io/Twilight-Filter/' },
+  { num: 'P3', name: 'Flow of Water', href: 'https://sane24.github.io/flow-of-water/', current: true },
+]
+
+/** A thin strip linking the CS180 project pages, styled like a tide line. */
+export function ProjectStrip() {
+  return (
+    <nav className="projects" aria-label="CS180 projects">
+      <span className="projects__label">CS180 projects</span>
+      <ol className="projects__list">
+        {PROJECTS.map((p) => (
+          <li key={p.num}>
+            <a href={p.href} aria-current={p.current ? 'page' : undefined}>
+              <span className="projects__num">{p.num}</span>
+              <span className="projects__name">{p.name}</span>
+            </a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  )
+}
+
 interface SectionProps {
   id: string
   num: string

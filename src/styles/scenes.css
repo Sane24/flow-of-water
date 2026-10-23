@@ -1032,3 +1032,121 @@
     margin-right: 0;
   }
 }
+
+/* ================================================================ project strip */
+.projects {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem 1.6rem;
+  max-width: 78rem;
+  margin: 0 auto;
+  padding: 0.85rem var(--gutter) 0.8rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  color: var(--seaglass);
+}
+
+/* a faint wavy tide line under the strip */
+.projects::after {
+  content: '';
+  position: absolute;
+  left: var(--gutter);
+  right: var(--gutter);
+  bottom: -3px;
+  height: 7px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='7'%3E%3Cpath d='M0 3.5c5-4 10-4 15 0s10 4 15 0 7-3 10-1.5' fill='none' stroke='%23a7c9c0' stroke-opacity='.35' stroke-width='1'/%3E%3C/svg%3E")
+    repeat-x left center / 40px 7px;
+  animation: tide 14s linear infinite;
+}
+
+@keyframes tide {
+  to {
+    background-position-x: 40px;
+  }
+}
+
+.projects__label {
+  flex: none;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.62rem;
+  color: rgba(167, 201, 192, 0.7);
+}
+
+.projects__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.4rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.projects__list li {
+  margin: 0;
+}
+
+.projects__list a {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  min-height: 32px;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid rgba(207, 226, 220, 0.18);
+  border-radius: 999px;
+  color: var(--foam);
+  text-decoration: none;
+  background: rgba(237, 244, 239, 0.03);
+  transition:
+    background 0.25s,
+    border-color 0.25s,
+    color 0.25s;
+}
+
+.projects__list a:hover {
+  background: rgba(237, 244, 239, 0.1);
+  border-color: rgba(207, 226, 220, 0.5);
+  color: var(--foam);
+}
+
+.projects__num {
+  color: #e4a58f;
+  font-weight: 500;
+}
+
+.projects__name {
+  font-family: var(--font-display);
+  font-size: 0.86rem;
+  letter-spacing: 0;
+  font-variation-settings: 'SOFT' 100, 'opsz' 14;
+}
+
+.projects__list a[aria-current='page'] {
+  background: rgba(167, 201, 192, 0.16);
+  border-color: rgba(167, 201, 192, 0.55);
+}
+
+.projects__list a[aria-current='page'] .projects__name {
+  font-style: italic;
+}
+
+@media (max-width: 700px) {
+  .projects {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  .projects__list {
+    gap: 0.4rem;
+  }
+  .projects__list a {
+    white-space: nowrap;
+    padding: 0.3rem 0.6rem;
+  }
+  .projects__name {
+    font-size: 0.8rem;
+  }
+}
