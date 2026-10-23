@@ -1,12 +1,12 @@
 import { fig } from '../data/figures'
 import { Figure, FigureRow, Meta } from '../components/Figure'
 import { Eq, M } from '../components/Math'
-import { Callout, MarginPlate, Params, Section, SubHead } from '../components/Layout'
+import { MarginPlate, Params, Section, SubHead } from '../components/Layout'
 import { EditTimeline } from '../components/EditTimeline'
 import { AnagramViewer } from '../components/AnagramViewer'
 import { HybridViewer } from '../components/HybridViewer'
 import { Butterfly, Cat, Frog, Lancet } from '../components/Motifs'
-import { FrameScrubber, InterpolationPlayground, WipeCompare } from '../components/Interactive'
+import { FrameScrubber, InterpolationPlayground } from '../components/Interactive'
 import { Caustics, Fireflies } from '../components/Ambient'
 import { NightShore, Pond, WaveEdge } from '../components/Scenes'
 import { Sketchbook } from '../components/Sketchbook'
@@ -238,16 +238,6 @@ export function PartA() {
           <M>{String.raw`t = 0.6`}</M> and stays to the end, the tree on the right changes shape, and a couple of windows shift.
           The sampler committed to specific details that look plausible but were not in the photo.
         </p>
-        <Callout title="The numbers disagree with my eyes">
-          <p>
-            The notebook logged the MSE to the original for each method on this input: Gaussian blur{' '}
-            <strong>0.0253</strong>, one step <strong>0.0071</strong>, Euler <strong>0.0086</strong>. So Euler is
-            slightly worse than one step by MSE, even though it clearly looks better. I think that is the same
-            averaging story again: the one-step estimate hedges toward the mean, which is exactly what minimizes
-            squared error, while Euler commits to one sharp possibility and pays for every detail it guesses
-            differently.
-          </p>
-        </Callout>
       </Section>
 
       {/* ------------------------------------------------------------ 1.6 */}
@@ -310,13 +300,6 @@ export function PartA() {
           pose, higher contrast, slightly oversaturated skin. Guidance pulls every sample toward the most
           prompt-like answer, which here means a stock headshot.
         </p>
-        <WipeCompare
-          pairs={seeds.map((sd) => ({ key: String(sd), before: fig(`a16-seed${sd}`), after: fig(`a21-seed${sd}`) }))}
-          beforeLabel="no guidance"
-          afterLabel="w = 7"
-          caption="Drag across any seed to compare its unguided sample (left) with the guided one (right). Same starting noise."
-          meta="model output · conditional_*.png vs cfg_*.png"
-        />
       </Section>
 
       {/* ------------------------------------------------------------ 3.1 */}
