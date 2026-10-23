@@ -11,12 +11,15 @@ interface SectionProps {
   children: ReactNode
   motif?: ReactNode
   className?: string
+  ambient?: 'forest' | 'glass' | 'night' | 'lab'
+  scene?: ReactNode
 }
 
 /** One numbered assignment section with an anchor the contents rail can follow. */
-export function Section({ id, num, title, children, motif, className = '' }: SectionProps) {
+export function Section({ id, num, title, children, motif, className = '', ambient, scene }: SectionProps) {
   return (
-    <section id={id} className={`section flow ${className}`} data-toc aria-labelledby={`${id}-title`}>
+    <section id={id} className={`section flow ${className}`} data-toc data-ambient={ambient} aria-labelledby={`${id}-title`}>
+      {scene}
       <header className="section__head">
         <span className="section__num">{num}</span>
         <h3 id={`${id}-title`} className="section__title">

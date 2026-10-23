@@ -15,18 +15,3 @@ export async function loadAllImages() {
     ),
   )
 }
-
-export function PrintButton({ tone = 'light' }: { tone?: 'light' | 'dark' }) {
-  const onClick = async () => {
-    await loadAllImages()
-    window.print()
-  }
-  return (
-    <button type="button" className={`print-button print-button--${tone}`} onClick={onClick}>
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M6 9V3h12v6M6 18H4v-7h16v7h-2M7 14h10v7H7z" />
-      </svg>
-      Print / Save as PDF
-    </button>
-  )
-}

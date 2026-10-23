@@ -4,7 +4,7 @@ import { Frog, WaveRule } from '../components/Motifs'
 
 export function Observations() {
   return (
-    <section id="observations" className="closing flow" data-toc aria-labelledby="obs-title">
+    <section id="observations" className="closing flow" data-toc data-ambient="forest" aria-labelledby="obs-title">
       <p className="eyebrow">Experiments and observations</p>
       <h2 id="obs-title" className="closing__title">What I kept noticing</h2>
       <div className="obs-grid">
@@ -61,7 +61,7 @@ function M2({ children }: { children: string }) {
 
 export function References() {
   return (
-    <section id="references" className="closing references flow" data-toc aria-labelledby="ref-title">
+    <section id="references" className="closing references flow" data-toc data-ambient="forest" aria-labelledby="ref-title">
       <p className="eyebrow">References and code</p>
       <h2 id="ref-title" className="closing__title">Sources</h2>
       <div className="ref-grid">

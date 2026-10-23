@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react'
-import { PrintButton } from './PrintButton'
 
 interface Item {
   id: string
@@ -152,7 +151,6 @@ export function Contents() {
             </div>
             <List active={active} />
           </div>
-          <PrintButton />
         </div>
       </nav>
 
@@ -179,7 +177,6 @@ export function Contents() {
       >
         <p className="sheet__title">Contents</p>
         <List active={active} onNavigate={() => setOpen(false)} />
-        <PrintButton />
       </div>
     </>
   )

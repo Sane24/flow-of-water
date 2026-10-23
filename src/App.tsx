@@ -1,8 +1,10 @@
 import { useEffect } from 'react'
 import { LightboxProvider } from './components/Lightbox'
 import { Contents } from './components/Contents'
-import { loadAllImages } from './components/PrintButton'
+import { loadAllImages } from './components/loadImages'
 import { useReveal } from './components/motion'
+import { AmbientField } from './components/Ambient'
+import { ForestBand } from './components/Scenes'
 import { asset } from './data/figures'
 import { ChapterOpener, Hero, Introduction, PrintHeader } from './content/Front'
 import { PartA } from './content/PartA'
@@ -29,6 +31,7 @@ export default function App() {
         Skip to the report
       </a>
       <PrintHeader />
+      <AmbientField />
       <Hero />
       <div className="page">
         <Contents />
@@ -75,9 +78,10 @@ export default function App() {
               generate real samples.
             </p>
           </ChapterOpener>
-          <div className="lab">
+          <div className="lab" data-ambient="lab">
             <PartB />
           </div>
+          <ForestBand />
           <Observations />
           <References />
         </main>

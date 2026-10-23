@@ -7,6 +7,9 @@ import { AnagramViewer } from '../components/AnagramViewer'
 import { HybridViewer } from '../components/HybridViewer'
 import { Butterfly, Cat, Frog, Lancet } from '../components/Motifs'
 import { FrameScrubber, InterpolationPlayground, WipeCompare } from '../components/Interactive'
+import { Caustics, Fireflies } from '../components/Ambient'
+import { NightShore, Pond, WaveEdge } from '../components/Scenes'
+import { Sketchbook } from '../components/Sketchbook'
 import { asset } from '../data/figures'
 
 const seeds = [180, 181, 182, 183, 184]
@@ -317,7 +320,7 @@ export function PartA() {
       </Section>
 
       {/* ------------------------------------------------------------ 3.1 */}
-      <Section id="a-3-1" num="3.1" title="Image-to-Image Editing" motif={<Frog title="Keroppi-style frog doodle" />}>
+      <Section id="a-3-1" num="3.1" title="Image-to-Image Editing" ambient="forest" motif={<Frog title="Keroppi-style frog doodle" />}>
         <MarginPlate
           src="images/decorative/haeckel-frog-detail.webp"
           w={420}
@@ -373,51 +376,64 @@ export function PartA() {
           0.14 to 0.25.
         </p>
 
-        <SubHead>A web image and my drawings</SubHead>
+        <SubHead>An image from the web</SubHead>
         <EditTimeline section="3.1" group="orange-cat" title="Orange cat" kicker="image from the web" label="Fig. A15" initial="0.14" />
         <p>
           The clearest jump of the set. At 0.02 and 0.04 it is a man in a white T-shirt next to the bars, and at
           0.06 a hand gripping one of the bars. At 0.10 the cat is back, but as a smooth, almost cartoon cat with
           huge glassy eyes. Real fur texture only returns from 0.14 on.
         </p>
-        <EditTimeline section="3.1" group="malfoy" title="Malfoy" kicker="my drawing" label="Fig. A16" initial="0.10" />
-        <p>
-          This one gave the most convincing “make it real” result I found. 0.02 is a man's portrait printed on a
-          panel, and 0.04 and 0.06 are a hand holding a card and then a phone. At 0.10 and 0.14 the drawing becomes
-          a photo of a blonde woman in a black sweater with her chin on her hand, and the house crest turns into a
-          potted plant. At 0.25 it is a drawing again and the crest is back.
-        </p>
-        <EditTimeline section="3.1" group="keroppi" title="Keroppi" kicker="my drawing" label="Fig. A17" initial="0.14" />
-        <p>
-          Keroppi had the strangest path. 0.02 is a man's face, and 0.04 and 0.06 are a gray panel with a white cup
-          in the corner and fake lettering. At 0.10 and 0.14 the model finds the frog's layout and makes a product
-          photo of a Keroppi-shaped object: a gray box with two eyes, an X-shaped mouth, a pair of shorts and white
-          sneakers. 0.25 is a colorless pencil sketch with scribbled text, and the colors come back at 0.50.
-        </p>
+        <Sketchbook
+          title="from my sketchbook"
+          kicker="my own drawings"
+          intro={
+            <p>
+              These are my own drawings. They are flat, with clean lines and almost none of the texture of a photo,
+              which makes the editing easy to read: at low starting times the model throws the drawing away, and
+              somewhere in the middle it tries to turn it into a photograph.
+            </p>
+          }
+        >
+          <EditTimeline section="3.1" group="malfoy" title="Malfoy" kicker="my drawing" label="Fig. A16" initial="0.10" />
+          <p>
+            This one gave the most convincing “make it real” result I found. 0.02 is a man's portrait printed on a
+            panel, and 0.04 and 0.06 are a hand holding a card and then a phone. At 0.10 and 0.14 the drawing becomes
+            a photo of a blonde woman in a black sweater with her chin on her hand, and the house crest turns into a
+            potted plant. At 0.25 it is a drawing again and the crest is back.
+          </p>
+          <EditTimeline section="3.1" group="keroppi" title="Keroppi" kicker="my drawing" label="Fig. A17" initial="0.14" />
+          <p>
+            Keroppi had the strangest path. 0.02 is a man's face, and 0.04 and 0.06 are a gray panel with a white cup
+            in the corner and fake lettering. At 0.10 and 0.14 the model finds the frog's layout and makes a product
+            photo of a Keroppi-shaped object: a gray box with two eyes, an X-shaped mouth, a pair of shorts and white
+            sneakers. 0.25 is a colorless pencil sketch with scribbled text, and the colors come back at 0.50.
+          </p>
 
-        <SubHead>Extra runs on my drawings</SubHead>
-        <p>
-          The preprocessing center-crops to a square, which cut off the top of my Jeanne drawing, so I ran the
-          drawing twice: once with the default crop and once padded to a square with a light pink border using{' '}
-          <code>ImageOps.pad</code>.
-        </p>
-        <EditTimeline section="3.1" group="jeanne" title="Jeanne, center crop" kicker="my drawing" label="Fig. A18" initial="0.14" extra />
-        <p>
-          0.02 is a portrait, and 0.04 to 0.10 are crumpled paper, fabric and a pencil. At 0.14 the red trim of the
-          jacket gets reinterpreted as a face cut out of red paper, with the lips and an eye made from the trim. At
-          0.25 it is a pen drawing again with the face and hands redrawn, and 0.50 is faithful.
-        </p>
-        <EditTimeline section="3.1" group="jeanne-full" title="Jeanne, padded to a square" kicker="my drawing" label="Fig. A19" initial="0.25" extra />
-        <p>
-          With the border, the model read the whole frame as a photo of a printed object: 0.02 and 0.04 are
-          portraits printed on things, 0.06 and 0.10 are books with fake lettering. The intermediate times were the
-          interesting ones. 0.14 is a pink-tinted photo of an old man looking up, and 0.25 is a sketch of a young
-          man with pink hair and the same red accents. Only 0.50 is clearly Jeanne.
-        </p>
+          <p className="sketchbook__note">Jeanne, twice</p>
+          <p>
+            The preprocessing center-crops to a square, which cut off the top of my Jeanne drawing, so I ran the
+            drawing twice: once with the default crop and once padded to a square with a light pink border using{' '}
+            <code>ImageOps.pad</code>.
+          </p>
+          <EditTimeline section="3.1" group="jeanne" title="Jeanne, center crop" kicker="my drawing" label="Fig. A18" initial="0.14" extra />
+          <p>
+            0.02 is a portrait, and 0.04 to 0.10 are crumpled paper, fabric and a pencil. At 0.14 the red trim of the
+            jacket gets reinterpreted as a face cut out of red paper, with the lips and an eye made from the trim. At
+            0.25 it is a pen drawing again with the face and hands redrawn, and 0.50 is faithful.
+          </p>
+          <EditTimeline section="3.1" group="jeanne-full" title="Jeanne, padded to a square" kicker="my drawing" label="Fig. A19" initial="0.25" extra />
+          <p>
+            With the border, the model read the whole frame as a photo of a printed object: 0.02 and 0.04 are
+            portraits printed on things, 0.06 and 0.10 are books with fake lettering. The intermediate times were the
+            interesting ones. 0.14 is a pink-tinted photo of an old man looking up, and 0.25 is a sketch of a young
+            man with pink hair and the same red accents. Only 0.50 is clearly Jeanne.
+          </p>
+        </Sketchbook>
+        <Pond />
       </Section>
 
       {/* ------------------------------------------------------------ 3.2 */}
-      <Section id="a-3-2" num="3.2" title="Text-Guided Image Editing">
+      <Section id="a-3-2" num="3.2" title="Text-Guided Image Editing" ambient="forest">
         <p>
           Same procedure, same seven starting times, but the generic prompt is replaced with my own. The exact
           prompt strings from the notebook are printed above each sweep.
@@ -475,7 +491,20 @@ export function PartA() {
       </Section>
 
       {/* ------------------------------------------------------------ 3.3 */}
-      <Section id="a-3-3" num="3.3" title="Visual Anagrams" className="section--night" motif={<Cat title="Black cat silhouette" />}>
+      <Section
+        id="a-3-3"
+        num="3.3"
+        title="Visual Anagrams"
+        className="section--night"
+        ambient="night"
+        motif={<Cat title="Black cat silhouette" />}
+        scene={
+          <>
+            <WaveEdge position="top" />
+            <Fireflies />
+          </>
+        }
+      >
         <div className="night-moon" aria-hidden="true">
           <img src={asset('images/decorative/steinlen-chat-noir-cat.webp')} alt="" width={440} height={440} loading="lazy" />
           <span>after Steinlen, 1896</span>
@@ -529,10 +558,20 @@ export function PartA() {
             </p>
           </AnagramViewer>
         </div>
+        <NightShore />
+        <WaveEdge position="bottom" />
       </Section>
 
       {/* ------------------------------------------------------------ 3.4 */}
-      <Section id="a-3-4" num="3.4" title="Hybrid Images" className="section--glass" motif={<Butterfly title="Butterfly line drawing" />}>
+      <Section
+        id="a-3-4"
+        num="3.4"
+        title="Hybrid Images"
+        className="section--glass"
+        ambient="glass"
+        motif={<Butterfly title="Butterfly line drawing" />}
+        scene={<Caustics tone="glass" />}
+      >
         <MarginPlate
           src="images/decorative/haeckel-tineida-plate.webp"
           w={900}
