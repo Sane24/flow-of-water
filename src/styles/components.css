@@ -1294,3 +1294,44 @@ img[data-pixelated] {
   cursor: pointer;
   border-radius: 2px;
 }
+
+/* ---------------------------------------------------------------- margin plates */
+.margin-plate {
+  display: none;
+}
+
+@media (min-width: 1360px) {
+  .margin-plate {
+    display: block;
+    position: relative;
+    height: 0;
+  }
+  .margin-plate figure {
+    position: absolute;
+    left: calc(100% + 2.6rem);
+    top: 0;
+    width: 10.5rem;
+    margin: 0;
+    padding: 0.5rem;
+    background: var(--paper);
+    border: 1px solid var(--hairline-strong);
+    transform: rotate(1.2deg);
+  }
+  .margin-plate img {
+    width: 100%;
+    mix-blend-mode: multiply;
+  }
+  .margin-plate figcaption {
+    margin-top: 0.4rem;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    line-height: 1.4;
+    color: var(--charcoal-3);
+  }
+}
+
+@media (max-width: 600px) {
+  .eq .katex {
+    font-size: 0.94em;
+  }
+}

@@ -1,7 +1,7 @@
 import { fig } from '../data/figures'
 import { Figure, FigureRow, Meta } from '../components/Figure'
 import { Eq, M } from '../components/Math'
-import { Callout, Params, Section, SubHead } from '../components/Layout'
+import { Callout, MarginPlate, Params, Section, SubHead } from '../components/Layout'
 import { EditTimeline } from '../components/EditTimeline'
 import { AnagramViewer } from '../components/AnagramViewer'
 import { HybridViewer } from '../components/HybridViewer'
@@ -357,6 +357,12 @@ export function PartA() {
         </p>
 
         <SubHead>A web image and my drawings</SubHead>
+        <MarginPlate
+          src="images/decorative/haeckel-frog-detail.webp"
+          w={420}
+          h={437}
+          caption="Haeckel, Batrachia, 1904 · public domain · decorative, not a result"
+        />
         <EditTimeline section="3.1" group="orange-cat" title="Orange cat" kicker="required · image from the web" label="Fig. A15" initial="0.10" />
         <p>
           The clearest jump of the set. At 0.02 and 0.04 it is a man in a white T-shirt next to the bars, and at
@@ -550,6 +556,12 @@ export function PartA() {
           means the sampler keeps steering the composition toward <M>{String.raw`a`}</M> at every step while letting <M>{String.raw`b`}</M> paint
           the texture. The distant view is the 64 × 64 Lanczos downsample the notebook displays.
         </p>
+        <MarginPlate
+          src="images/decorative/haeckel-tineida-plate.webp"
+          w={900}
+          h={1271}
+          caption="Haeckel, Tineida, 1904 · public domain · decorative, not a result"
+        />
         <p className="screen-only reading-hint">
           Drag “viewing distance” to step back from each image. At the far end the slider swaps in the saved 64 × 64
           file.

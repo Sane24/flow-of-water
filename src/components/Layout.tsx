@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { asset } from '../data/figures'
 
 export const LIVE_URL = 'https://sane24.github.io/flow-of-water/'
 export const REPO_URL = 'https://github.com/Sane24/flow-of-water'
@@ -72,5 +73,17 @@ export function Callout({ title, children }: { title?: string; children: ReactNo
       {title && <p className="callout__title">{title}</p>}
       {children}
     </aside>
+  )
+}
+
+/** A small decorative engraving that sits in the right margin on wide screens. */
+export function MarginPlate({ src, w, h, caption }: { src: string; w: number; h: number; caption: string }) {
+  return (
+    <div className="margin-plate" aria-hidden="true">
+      <figure>
+        <img src={asset(src)} width={w} height={h} alt="" loading="lazy" decoding="async" />
+        <figcaption>{caption}</figcaption>
+      </figure>
+    </div>
   )
 }
