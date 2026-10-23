@@ -40,7 +40,7 @@ function useCanvasLoop(draw: (ctx: CanvasRenderingContext2D, w: number, h: numbe
     }
     const resize = () => {
       const rect = canvas.getBoundingClientRect()
-      const dpr = Math.min(2, window.devicePixelRatio || 1)
+      const dpr = Math.min(1.5, window.devicePixelRatio || 1)
       w = rect.width
       h = rect.height
       canvas.width = Math.max(1, Math.round(w * dpr))

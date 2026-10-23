@@ -3,15 +3,17 @@
 interface MotifProps {
   className?: string
   title?: string
+  width?: number
+  height?: number
 }
 
 function a11y(title?: string) {
   return title ? { role: 'img' as const, 'aria-label': title } : { 'aria-hidden': true as const }
 }
 
-export function Frog({ className = '', title }: MotifProps) {
+export function Frog({ className = '', title, width, height }: MotifProps) {
   return (
-    <svg className={`motif motif--frog ${className}`} viewBox="0 0 72 60" {...a11y(title)}>
+    <svg className={`motif motif--frog ${className}`} viewBox="0 0 72 60" width={width} height={height} {...a11y(title)}>
       <path
         className="fill-soft"
         d="M9 33c0-10 10-15 27-15s27 5 27 15c0 13-11 20-27 20S9 46 9 33z"
@@ -180,10 +182,10 @@ export function Contours({ className = '', rings = 9, seed = 1 }: { className?: 
 /** Concentric rings that slowly spread, like a stone dropped in still water. */
 export function Ripples({ className = '' }: { className?: string }) {
   return (
-    <svg className={`ripples ${className}`} viewBox="0 0 200 200" aria-hidden="true">
+    <div className={`ripples ${className}`} aria-hidden="true">
       {[0, 1, 2].map((i) => (
-        <circle key={i} cx="100" cy="100" r="62" style={{ animationDelay: `${i * -2.6}s` }} />
+        <i key={i} style={{ animationDelay: `${i * -2.6}s` }} />
       ))}
-    </svg>
+    </div>
   )
 }
