@@ -61,7 +61,8 @@
   .hybrid__controls,
   .hybrid__far-swap,
   .clockwork__glass,
-  .hand-note svg {
+  .hand-note svg,
+  .margin-plate {
     display: none !important;
   }
 
