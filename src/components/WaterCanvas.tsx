@@ -82,13 +82,25 @@ function hash(n: number) {
 
 const LINES = 40
 
+interface Ripple {
+  x: number
+  y: number
+  t: number
+}
+
 /**
  * The hero sea: engraved current lines receding toward a horizon, with swells rolling toward
- * the viewer and moonlight glints gathering under the porthole plate.
+ * the viewer and moonlight glints gathering under the porthole plate. Moving a pointer over the
+ * water drops small ripples into it.
  */
 export function WaterCanvas({ className = '' }: { className?: string }) {
+  const ripples = useRef<Ripple[]>([])
+  const clock = useRef(0)
+
   const ref = useCanvasLoop((ctx, w, h, time) => {
+    clock.current = time
     ctx.clearRect(0, 0, w, h)
+    const live = (ripples.current = ripples.current.filter((r) => time - r.t < 3.2))
     const narrow = w < 760
     const moonX = narrow ? w * 0.5 : w * 0.74
     const step = narrow ? 8 : 6
@@ -106,8 +118,18 @@ export function WaterCanvas({ className = '' }: { className?: string }) {
       const s = 0.85 + hash(i + 7) * 0.3
       const yAt = (x: number) => {
         const ph = x * k
+        let ripple = 0
+        for (const r of live) {
+          const age = time - r.t
+          // rings spread outward; the vertical axis is squashed to match the perspective
+          const dist = Math.hypot(x - r.x, (yb - r.y) * 2.2)
+          const ring = Math.exp(-((dist - age * 150) ** 2) / 700)
+          if (ring < 0.01) continue
+          ripple += ring * 9 * Math.exp(-age * 1.15) * (0.35 + d) * Math.sin(dist * 0.085 - age * 5)
+        }
         return (
           yb +
+          ripple +
           amp *
             (0.6 * Math.sin(ph * s + time * speed + p1) +
               0.28 * Math.sin(ph * 2.3 - time * speed * 1.35 + p2) +
@@ -139,6 +161,33 @@ export function WaterCanvas({ className = '' }: { className?: string }) {
       ctx.globalAlpha = 1
     }
   })
+
+  useEffect(() => {
+    const canvas = ref.current
+    const host = canvas?.parentElement
+    if (!canvas || !host) return
+    let last = -1
+    const drop = (e: PointerEvent, force = false) => {
+      const r = canvas.getBoundingClientRect()
+      const x = e.clientX - r.left
+      const y = e.clientY - r.top
+      if (y < r.height * 0.12 || y > r.height || x < 0 || x > r.width) return
+      const now = clock.current
+      if (!force && now - last < 0.16) return
+      last = now
+      ripples.current.push({ x, y, t: now })
+      if (ripples.current.length > 7) ripples.current.shift()
+    }
+    const onMove = (e: PointerEvent) => drop(e)
+    const onDown = (e: PointerEvent) => drop(e, true)
+    host.addEventListener('pointermove', onMove, { passive: true })
+    host.addEventListener('pointerdown', onDown, { passive: true })
+    return () => {
+      host.removeEventListener('pointermove', onMove)
+      host.removeEventListener('pointerdown', onDown)
+    }
+  }, [ref])
+
   return <canvas ref={ref} className={className} aria-hidden="true" />
 }
 

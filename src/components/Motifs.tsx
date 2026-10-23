@@ -18,8 +18,10 @@ export function Frog({ className = '', title }: MotifProps) {
       />
       <circle className="fill-paper" cx="22" cy="16" r="10.5" />
       <circle className="fill-paper" cx="50" cy="16" r="10.5" />
-      <circle className="fill-ink" cx="23.5" cy="17" r="3.2" />
-      <circle className="fill-ink" cx="48.5" cy="17" r="3.2" />
+      <g className="blink">
+        <circle className="fill-ink" cx="23.5" cy="17" r="3.2" />
+        <circle className="fill-ink" cx="48.5" cy="17" r="3.2" />
+      </g>
       <circle className="fill-paper-solid" cx="24.6" cy="15.8" r="1" />
       <circle className="fill-paper-solid" cx="49.6" cy="15.8" r="1" />
       <path className="line" d="M26 33.5c3.5 5 16.5 5 20 0" />
@@ -51,8 +53,10 @@ export function Butterfly({ className = '', title }: MotifProps) {
   )
   return (
     <svg className={`motif motif--butterfly ${className}`} viewBox="0 0 120 90" {...a11y(title)}>
-      {wing}
-      <g transform="translate(120 0) scale(-1 1)">{wing}</g>
+      <g className="flap">{wing}</g>
+      <g transform="translate(120 0) scale(-1 1)">
+        <g className="flap">{wing}</g>
+      </g>
       <ellipse className="fill-ink" cx="60" cy="47" rx="2.3" ry="13" />
       <path className="line" d="M59 35c-2-9-6-15-11-17M61 35c2-9 6-15 11-17" />
       <circle className="fill-ink" cx="47.6" cy="17.6" r="1.4" />
@@ -69,9 +73,11 @@ export function Cat({ className = '', title }: MotifProps) {
         d="M24 31 19 6l15 13c7-2.6 15-2.6 22 0L71 6l-5 25c4 9 1 16-6 20 9 8 13 18 13 30 0 14-8 21-17 21H34c-9 0-17-7-17-21 0-12 4-22 13-30-7-4-10-11-6-20z"
       />
       <path className="tail" d="M58 99c13 3 25-2 26-14 1-10-6-15-12-13" />
-      <ellipse className="fill-eye" cx="35" cy="35" rx="4" ry="2.8" />
-      <ellipse className="fill-eye" cx="55" cy="35" rx="4" ry="2.8" />
-      <path className="pupil" d="M35 32.6v4.8M55 32.6v4.8" />
+      <g className="blink">
+        <ellipse className="fill-eye" cx="35" cy="35" rx="4" ry="2.8" />
+        <ellipse className="fill-eye" cx="55" cy="35" rx="4" ry="2.8" />
+        <path className="pupil" d="M35 32.6v4.8M55 32.6v4.8" />
+      </g>
     </svg>
   )
 }
@@ -103,16 +109,18 @@ export function Fern({ className = '', title, leaves = 9 }: MotifProps & { leave
   })
   return (
     <svg className={`motif motif--fern ${className}`} viewBox="0 0 112 124" {...a11y(title)}>
-      <path className="line" d="M8 118C30 82 58 46 104 10" />
-      {items.map((l) => (
-        <g key={l.key} transform={`translate(${l.x} ${l.y}) rotate(${l.a + l.side * 52})`}>
-          <path
-            className="fill-leaf"
-            d={`M0 0C${l.len * 0.3} ${-l.len * 0.22} ${l.len * 0.75} ${-l.len * 0.2} ${l.len} 0C${l.len * 0.75} ${l.len * 0.2} ${l.len * 0.3} ${l.len * 0.22} 0 0z`}
-          />
-          <path className="vein" d={`M0 0L${l.len * 0.85} 0`} />
-        </g>
-      ))}
+      <g className="frond">
+        <path className="line" d="M8 118C30 82 58 46 104 10" />
+        {items.map((l) => (
+          <g key={l.key} transform={`translate(${l.x} ${l.y}) rotate(${l.a + l.side * 52})`}>
+            <path
+              className="fill-leaf"
+              d={`M0 0C${l.len * 0.3} ${-l.len * 0.22} ${l.len * 0.75} ${-l.len * 0.2} ${l.len} 0C${l.len * 0.75} ${l.len * 0.2} ${l.len * 0.3} ${l.len * 0.22} 0 0z`}
+            />
+            <path className="vein" d={`M0 0L${l.len * 0.85} 0`} />
+          </g>
+        ))}
+      </g>
     </svg>
   )
 }
@@ -164,6 +172,17 @@ export function Contours({ className = '', rings = 9, seed = 1 }: { className?: 
     <svg className={`contours ${className}`} viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
       {paths.map((d, i) => (
         <path key={i} d={d} />
+      ))}
+    </svg>
+  )
+}
+
+/** Concentric rings that slowly spread, like a stone dropped in still water. */
+export function Ripples({ className = '' }: { className?: string }) {
+  return (
+    <svg className={`ripples ${className}`} viewBox="0 0 200 200" aria-hidden="true">
+      {[0, 1, 2].map((i) => (
+        <circle key={i} cx="100" cy="100" r="62" style={{ animationDelay: `${i * -2.6}s` }} />
       ))}
     </svg>
   )
