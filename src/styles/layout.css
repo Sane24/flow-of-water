@@ -953,3 +953,68 @@
 .closing {
   padding: clamp(3rem, 7vw, 5rem) 0 2rem;
 }
+
+/* ---------------------------------------------------------------- hero motion and details */
+.hero__ripples {
+  position: absolute;
+  left: -14%;
+  top: -14%;
+  width: 128%;
+  height: auto;
+  aspect-ratio: 1;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.hero__plate {
+  transform: translateY(calc(var(--py, 0) * 0.14px));
+}
+
+.hero__text {
+  transform: translateY(calc(var(--py, 0) * 0.06px));
+}
+
+.hero__sea {
+  transform: translateY(calc(var(--py, 0) * -0.05px));
+}
+
+/* drop caps */
+.lede::first-letter,
+.opener__intro p::first-letter {
+  float: left;
+  font-family: var(--font-display);
+  font-size: 3.6em;
+  line-height: 0.8;
+  padding: 0.08em 0.1em 0 0;
+  color: var(--current);
+  font-variation-settings: 'SOFT' 100, 'WONK' 1, 'opsz' 144;
+  font-weight: 300;
+}
+
+.opener--falls .opener__intro p::first-letter {
+  color: var(--seaglass);
+}
+
+/* the Kirifuri print in the Part B opener */
+.opener__print {
+  display: grid;
+  grid-template-columns: 6.5rem minmax(0, 1fr);
+  gap: 1rem;
+  align-items: end;
+  margin: 1.6rem 0 0;
+  max-width: 30rem;
+}
+
+.opener__print img {
+  border: 1px solid rgba(237, 244, 239, 0.35);
+  padding: 4px;
+  background: rgba(237, 244, 239, 0.06);
+  transform: rotate(-1.5deg);
+}
+
+.opener__print figcaption {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  line-height: 1.5;
+  color: rgba(207, 226, 220, 0.65);
+}

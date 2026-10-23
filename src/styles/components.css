@@ -1335,3 +1335,634 @@ img[data-pixelated] {
     font-size: 0.94em;
   }
 }
+
+/* ================================================================ interactive explainers */
+.playground {
+  padding: 1.2rem;
+  border: 1px solid var(--hairline);
+  background:
+    linear-gradient(135deg, rgba(167, 201, 192, 0.18), transparent 60%),
+    rgba(248, 245, 236, 0.85);
+}
+
+.playground__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1.6rem;
+  align-items: center;
+}
+
+.playground__canvas {
+  position: relative;
+  aspect-ratio: 1;
+  background: var(--ink);
+}
+
+.playground__canvas canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.playground__loading {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--seaglass);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+}
+
+.playground__kicker {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--coral-2);
+  margin: 0;
+}
+
+.playground__t {
+  font-family: var(--font-display);
+  font-size: var(--step-3);
+  color: var(--ink);
+  margin: 0.2rem 0 0.8rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.playground__t strong {
+  font-weight: 400;
+  color: var(--current);
+}
+
+.playground__slider input,
+.wipe__range input {
+  width: 100%;
+  accent-color: var(--current);
+  min-height: 30px;
+}
+
+.playground__ticks {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  color: var(--charcoal-3);
+}
+
+.playground__mix {
+  display: flex;
+  margin: 1rem 0;
+  height: 1.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+.playground__mix span {
+  display: flex;
+  align-items: center;
+  padding: 0 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: flex-basis 0.15s linear;
+}
+
+.playground__mix span:first-child {
+  background: repeating-linear-gradient(45deg, #2f4a52 0 3px, #3e5d66 3px 6px);
+  color: var(--foam);
+}
+
+.playground__mix span:last-child {
+  background: var(--seaglass);
+  color: var(--ink);
+  justify-content: flex-end;
+}
+
+.playground__jumps,
+.wipe__picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.playground__jumps button,
+.wipe__picks button,
+.scrubber__play,
+.scrubber__choice {
+  min-height: 38px;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid var(--hairline-strong);
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.playground__jumps button[aria-pressed='true'],
+.wipe__picks button[aria-pressed='true'],
+.scrubber__choice[aria-pressed='true'],
+.scrubber__play[aria-pressed='true'] {
+  background: var(--ink);
+  color: var(--foam);
+  border-color: var(--ink);
+}
+
+.playground__note {
+  margin: 1rem 0 0;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--charcoal-2);
+  border-left: 2px solid var(--coral);
+  padding-left: 0.7rem;
+}
+
+@media (max-width: 700px) {
+  .playground__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* frame scrubber */
+.scrubber__title {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--current);
+  margin-bottom: 0.6rem;
+}
+
+.scrubber__stage {
+  position: relative;
+  display: grid;
+  margin: 0 auto;
+  background: var(--paper-2);
+}
+
+.scrubber__frame {
+  grid-area: 1 / 1;
+  opacity: 0;
+  transition: opacity 0.55s var(--ease-water);
+  pointer-events: none;
+}
+
+.scrubber__frame img {
+  width: 100%;
+}
+
+.scrubber__frame.is-current {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.scrubber__badge {
+  position: absolute;
+  left: 0.6rem;
+  top: 0.6rem;
+  padding: 0.25rem 0.55rem;
+  background: rgba(16, 44, 54, 0.82);
+  color: var(--foam);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+.scrubber--tabs .scrubber__badge {
+  left: auto;
+  right: 0.6rem;
+}
+
+.scrubber__bar {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.6rem 0.8rem;
+  align-items: center;
+  margin-top: 0.8rem;
+}
+
+.scrubber__play {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.scrubber__play svg {
+  width: 0.8rem;
+  fill: currentColor;
+}
+
+.scrubber__choices {
+  display: flex;
+  gap: 0.35rem;
+  overflow-x: auto;
+}
+
+.scrubber--thumbs .scrubber__choice {
+  padding: 0.2rem;
+  display: grid;
+  gap: 0.15rem;
+  width: 4.8rem;
+  flex: none;
+}
+
+.scrubber--thumbs .scrubber__choice img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+
+.scrubber--thumbs .scrubber__choice span {
+  font-size: 0.62rem;
+}
+
+.scrubber__track {
+  grid-column: 1 / -1;
+  height: 2px;
+  background: var(--hairline);
+}
+
+.scrubber__track span {
+  display: block;
+  height: 100%;
+  transform-origin: left;
+  background: linear-gradient(90deg, var(--seaglass), var(--current));
+  transition: transform 0.5s var(--ease-water);
+}
+
+.scrubber__print {
+  display: none;
+}
+
+/* before / after wipe */
+.wipe__box {
+  position: relative;
+  max-width: var(--wipe-max, 30rem);
+  margin: 0 auto;
+  overflow: hidden;
+  cursor: ew-resize;
+  touch-action: pan-y;
+  user-select: none;
+  background: var(--ink);
+}
+
+.wipe__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.wipe__img--before {
+  clip-path: inset(0 calc(100% - var(--pos)) 0 0);
+}
+
+.wipe__handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--pos);
+  width: 2px;
+  margin-left: -1px;
+  background: var(--foam);
+  box-shadow: 0 0 0 1px rgba(16, 44, 54, 0.35);
+}
+
+.wipe__handle svg {
+  max-width: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 2.4rem;
+  height: 2.4rem;
+  transform: translate(-50%, -50%);
+  padding: 0.45rem;
+  border-radius: 50%;
+  background: var(--foam);
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+
+.wipe__tag {
+  position: absolute;
+  top: 0.6rem;
+  padding: 0.2rem 0.5rem;
+  background: rgba(16, 44, 54, 0.8);
+  color: var(--foam);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  border-radius: 2px;
+}
+
+.wipe__tag--before {
+  left: 0.6rem;
+}
+
+.wipe__tag--after {
+  right: 0.6rem;
+}
+
+.wipe__controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.2rem;
+  align-items: center;
+  max-width: var(--wipe-max, 30rem);
+  margin: 0.7rem auto 0;
+}
+
+.wipe .caption {
+  max-width: var(--wipe-max, 30rem);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.wipe__range {
+  flex: 1 1 12rem;
+}
+
+/* ================================================================ themes and decoration */
+
+/* night band: stars, a cat medallion for a moon, moonlight on the water below */
+.section--night {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.section--night::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 50% 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    radial-gradient(1.2px 1.2px at 8% 12%, #edf4ef, transparent 60%),
+    radial-gradient(1px 1px at 18% 30%, #edf4ef, transparent 60%),
+    radial-gradient(1.4px 1.4px at 31% 8%, #edf4ef, transparent 60%),
+    radial-gradient(1px 1px at 47% 22%, #edf4ef, transparent 60%),
+    radial-gradient(1px 1px at 63% 6%, #edf4ef, transparent 60%),
+    radial-gradient(1.3px 1.3px at 71% 26%, #edf4ef, transparent 60%),
+    radial-gradient(1px 1px at 92% 34%, #edf4ef, transparent 60%),
+    radial-gradient(1px 1px at 4% 44%, #edf4ef, transparent 60%),
+    radial-gradient(1px 1px at 55% 40%, #edf4ef, transparent 60%);
+  background-size: 100% 900px;
+  opacity: 0.55;
+  animation: twinkle 7s ease-in-out infinite alternate;
+}
+
+@keyframes twinkle {
+  from {
+    opacity: 0.25;
+  }
+  to {
+    opacity: 0.7;
+  }
+}
+
+.flow > .night-moon {
+  grid-column: auto;
+}
+
+.night-moon {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  width: 8rem;
+  pointer-events: none;
+  text-align: center;
+}
+
+.night-moon img {
+  border-radius: 50%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  box-shadow:
+    0 0 0 1px rgba(237, 244, 239, 0.45),
+    0 0 0 7px rgba(16, 44, 54, 0.55),
+    0 0 0 8px rgba(167, 201, 192, 0.25),
+    0 0 70px 14px rgba(237, 220, 180, 0.18);
+  animation: moonglow 9s ease-in-out infinite alternate;
+}
+
+@keyframes moonglow {
+  to {
+    box-shadow:
+      0 0 0 1px rgba(237, 244, 239, 0.45),
+      0 0 0 7px rgba(16, 44, 54, 0.55),
+      0 0 0 8px rgba(167, 201, 192, 0.25),
+      0 0 90px 22px rgba(237, 220, 180, 0.26);
+  }
+}
+
+.night-moon span {
+  display: block;
+  margin-top: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  line-height: 1.4;
+  color: rgba(207, 226, 220, 0.55);
+}
+
+@media (max-width: 1359px) {
+  .flow > .night-moon {
+    grid-column: text;
+  }
+  .night-moon {
+    position: relative;
+    top: auto;
+    right: auto;
+    grid-column: text;
+    justify-self: end;
+    margin: -1rem 0 1rem;
+    width: 5.5rem;
+  }
+  .night-moon span {
+    display: none;
+  }
+}
+
+/* stained glass: thin bands of colored light falling across the paper */
+.section--glass {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.section--glass::before {
+  content: '';
+  position: absolute;
+  top: -10%;
+  right: -10%;
+  width: 70%;
+  height: 34rem;
+  pointer-events: none;
+  z-index: -1;
+  background:
+    linear-gradient(115deg, transparent 30%, rgba(199, 118, 96, 0.09) 31%, rgba(199, 118, 96, 0.09) 34%, transparent 35%),
+    linear-gradient(115deg, transparent 38%, rgba(232, 196, 106, 0.1) 39%, rgba(232, 196, 106, 0.1) 41%, transparent 42%),
+    linear-gradient(115deg, transparent 45%, rgba(42, 103, 112, 0.09) 46%, rgba(42, 103, 112, 0.09) 50%, transparent 51%),
+    linear-gradient(115deg, transparent 54%, rgba(114, 141, 112, 0.09) 55%, rgba(114, 141, 112, 0.09) 57%, transparent 58%),
+    linear-gradient(115deg, transparent 61%, rgba(167, 201, 192, 0.14) 62%, rgba(167, 201, 192, 0.14) 66%, transparent 67%);
+  -webkit-mask-image: radial-gradient(ellipse at 70% 30%, #000 20%, transparent 70%);
+  mask-image: radial-gradient(ellipse at 70% 30%, #000 20%, transparent 70%);
+  animation: lightshift 16s ease-in-out infinite alternate;
+}
+
+@keyframes lightshift {
+  to {
+    transform: translateX(-3%) skewX(-2deg);
+    opacity: 0.75;
+  }
+}
+
+/* living motifs */
+.motif--butterfly .flap {
+  transform-box: view-box;
+  transform-origin: 60px 46px;
+  animation: flap 3.4s ease-in-out infinite;
+}
+
+@keyframes flap {
+  0%,
+  38%,
+  100% {
+    transform: scaleX(1);
+  }
+  46% {
+    transform: scaleX(0.68);
+  }
+  54% {
+    transform: scaleX(0.96);
+  }
+  62% {
+    transform: scaleX(0.74);
+  }
+  70% {
+    transform: scaleX(1);
+  }
+}
+
+.motif .blink {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: blink 6.5s ease-in-out infinite;
+}
+
+.motif--frog .blink {
+  animation-delay: -2.4s;
+}
+
+@keyframes blink {
+  0%,
+  93%,
+  100% {
+    transform: scaleY(1);
+  }
+  95.5% {
+    transform: scaleY(0.12);
+  }
+}
+
+.motif--fern .frond {
+  transform-box: view-box;
+  transform-origin: 8px 118px;
+  animation: sway 8s ease-in-out infinite alternate;
+}
+
+@keyframes sway {
+  from {
+    transform: rotate(-1.6deg);
+  }
+  to {
+    transform: rotate(2deg);
+  }
+}
+
+/* ripples around the hero porthole */
+.ripples circle {
+  fill: none;
+  stroke: rgba(207, 226, 220, 0.45);
+  stroke-width: 0.5;
+  transform-box: view-box;
+  transform-origin: 100px 100px;
+  animation: ripple 7.8s linear infinite;
+}
+
+@keyframes ripple {
+  from {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  to {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+/* scroll reveal, only when motion is allowed */
+html.motion :is(.fig, .timeline, .anagram, .hybrid, .obs, .keyidea, .callout, .playground, .scrubber, .wipe, .diagram) {
+  transition:
+    opacity 0.9s var(--ease-water),
+    transform 0.9s var(--ease-water);
+}
+
+html.motion :is(.fig, .timeline, .anagram, .hybrid, .obs, .keyidea, .callout, .playground, .scrubber, .wipe, .diagram):not(.is-in) {
+  opacity: 0;
+  transform: translateY(18px);
+}
+
+/* a ripple on the section number you just jumped to */
+@media (max-width: 1359px) {
+  .section__num {
+    position: relative;
+  }
+}
+
+.section:target .section__num::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 3.4rem;
+  height: 3.4rem;
+  margin: -1.7rem 0 0 -1.7rem;
+  border-radius: 50%;
+  border: 1px solid var(--coral);
+  animation: target-ripple 1.6s var(--ease-water) 2 both;
+  pointer-events: none;
+}
+
+@keyframes target-ripple {
+  from {
+    transform: scale(0.3);
+    opacity: 0.9;
+  }
+  to {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+
+/* margin plates on the night band */
+.section--night .margin-plate figure {
+  background: var(--ink-2);
+  border-color: rgba(207, 226, 220, 0.25);
+}
+
+.section--night .margin-plate img {
+  mix-blend-mode: normal;
+}
+
+.lab .hand-note {
+  justify-self: end;
+}
