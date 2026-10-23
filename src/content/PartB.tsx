@@ -1,7 +1,8 @@
 import { fig } from '../data/figures'
 import { Figure, FigureRow } from '../components/Figure'
 import { Eq, M } from '../components/Math'
-import { Callout, Note, Params, Section, SubHead } from '../components/Layout'
+import { Callout, MarginPlate, Note, Params, Section, SubHead } from '../components/Layout'
+import { FrameScrubber, WipeCompare } from '../components/Interactive'
 import { UNetDiagram } from '../components/UNetDiagram'
 
 function LossTable({ caption, rows }: { caption: string; rows: Array<[string, ...string[]]> }) {
@@ -232,6 +233,12 @@ export function PartB() {
           Flow matching fixes the averaging problem by never asking for the whole jump at once. A sample travels
           from noise <M>{String.raw`x_0`}</M> to data <M>{String.raw`x_1`}</M> along
         </p>
+        <MarginPlate
+          src="images/decorative/haeckel-muscinae-moss.webp"
+          w={560}
+          h={669}
+          caption="Haeckel, Muscinae, 1904"
+        />
         <Eq tag="B.3, B.4, B.5">{String.raw`x_t = (1 - t)\,x_0 + t\,x_1, \qquad u(x_t, t) = \frac{d x_t}{dt} = x_1 - x_0, \qquad \mathcal{L} = \mathbb{E}\,\big\lVert (x_1 - x_0) - u_\theta(x_t, t) \big\rVert^2`}</Eq>
         <p>
           One network has to handle every point on that path, and the right velocity depends on how far along we
@@ -316,12 +323,11 @@ export function PartB() {
           <M>{String.raw`x \sim \mathcal{N}(0, I)`}</M> with seed 180, for <M>{String.raw`i = 0, \dots, 49`}</M>:
         </p>
         <Eq>{String.raw`t_i = \tfrac{i}{50}, \qquad x \leftarrow x + \tfrac{1}{50}\,u_\theta(x, t_i)`}</Eq>
-        <FigureRow
+        <FrameScrubber
           label="Fig. B10"
-          columns={1}
-          size="wide"
-          className="figrow--stack"
-          items={[
+          mode="tabs"
+          interval={1300}
+          frames={[
             { entry: fig('b-time-fm-epoch1'), label: 'epoch 1' },
             { entry: fig('b-time-fm-epoch5'), label: 'epoch 5' },
             { entry: fig('b-time-fm-epoch10'), label: 'epoch 10' },
@@ -345,6 +351,7 @@ export function PartB() {
           The layout of each column is mostly decided early, between epochs 1 and 5, and later training mainly
           sharpens it. The results are legible but clearly worse than the class-conditioned model below.
         </p>
+        <Note>same noise every time, the digits just get sharper</Note>
       </Section>
 
       {/* ------------------------------------------------------------ B 2.4 */}
@@ -417,12 +424,11 @@ export function PartB() {
           For each checkpoint I generated four samples of every digit (40 images, labels 0 to 9 repeated four times)
           with 300 Euler steps, <M>{String.raw`\gamma = 5`}</M>, and the same seed, 180.
         </p>
-        <FigureRow
+        <FrameScrubber
           label="Fig. B13"
-          columns={1}
-          size="wide"
-          className="figrow--stack"
-          items={[
+          mode="tabs"
+          interval={1300}
+          frames={[
             { entry: fig('b-class-fm-epoch1'), label: 'epoch 1' },
             { entry: fig('b-class-fm-epoch5'), label: 'epoch 5' },
             { entry: fig('b-class-fm-epoch10'), label: 'epoch 10' },
@@ -499,6 +505,16 @@ export function PartB() {
           tie, with a small loss advantage for the scheduler. For this problem a sensibly chosen constant rate gets
           nearly all of the way there.
         </p>
+        <WipeCompare
+          pairs={[{ key: '10', before: fig('b-class-fm-epoch10'), after: fig('b-class-fm-noscheduler-epoch10') }]}
+          beforeLabel="scheduled"
+          afterLabel="constant 2e-3"
+          aspect="1440 / 552"
+          maxWidth="48rem"
+          caption="Drag across the two epoch-10 grids: same seed and guidance, scheduled run on the left, constant learning rate on the right."
+          meta="model output · class_fm_scheduled_epoch_10_samples.png vs class_fm_no_scheduler_epoch_10_samples.png"
+        />
+        <Note>honestly, a tie</Note>
         <Callout title="What I did not run">
           <p>
             I only sampled the no-scheduler model at epoch 10. Its epoch 1 and 5 checkpoints were saved but not

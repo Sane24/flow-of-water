@@ -2,13 +2,15 @@ import { useState, type ReactNode } from 'react'
 import { asset, fig } from '../data/figures'
 import { Eq, M } from '../components/Math'
 import { LIVE_URL, REPO_URL, Params } from '../components/Layout'
-import { Butterfly, Contours, Fern, WaveRule } from '../components/Motifs'
+import { Butterfly, Contours, Fern, Ripples, WaveRule } from '../components/Motifs'
+import { useHeroParallax } from '../components/motion'
 import { WaterCanvas, WaterfallCanvas } from '../components/WaterCanvas'
 import { PrintButton } from '../components/PrintButton'
 
 export function Hero() {
   const plate = fig('hero-cat-ocean')
   const [turned, setTurned] = useState(false)
+  useHeroParallax('top')
   return (
     <header className="hero" id="top">
       <div className="hero__sky" aria-hidden="true" />
@@ -60,6 +62,7 @@ export function Hero() {
         </div>
 
         <figure className="hero__plate">
+          <Ripples className="hero__ripples" />
           <button
             type="button"
             className={`hero__porthole ${turned ? 'is-turned' : ''}`}
@@ -167,9 +170,10 @@ interface OpenerProps {
   official: string
   children: ReactNode
   variant: 'ocean' | 'falls'
+  plate?: ReactNode
 }
 
-export function ChapterOpener({ id, numeral, title, official, children, variant }: OpenerProps) {
+export function ChapterOpener({ id, numeral, title, official, children, variant, plate }: OpenerProps) {
   return (
     <header id={id} className={`opener opener--${variant}`} data-toc>
       {variant === 'falls' && <Waterfall />}
@@ -182,6 +186,7 @@ export function ChapterOpener({ id, numeral, title, official, children, variant 
           <h2 className="opener__title">{title}</h2>
           <p className="opener__official">{official}</p>
           <div className="opener__intro">{children}</div>
+          {plate}
         </div>
         {variant === 'ocean' && (
           <figure className="opener__plate">
@@ -192,7 +197,7 @@ export function ChapterOpener({ id, numeral, title, official, children, variant 
               height={807}
               loading="lazy"
             />
-            <figcaption>after Hokusai, c. 1831 · public domain · decorative</figcaption>
+            <figcaption>after Hokusai, c. 1831</figcaption>
           </figure>
         )}
       </div>

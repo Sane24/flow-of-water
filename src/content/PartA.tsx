@@ -6,6 +6,8 @@ import { EditTimeline } from '../components/EditTimeline'
 import { AnagramViewer } from '../components/AnagramViewer'
 import { HybridViewer } from '../components/HybridViewer'
 import { Butterfly, Cat, Frog, Lancet } from '../components/Motifs'
+import { FrameScrubber, InterpolationPlayground, WipeCompare } from '../components/Interactive'
+import { asset } from '../data/figures'
 
 const seeds = [180, 181, 182, 183, 184]
 
@@ -55,6 +57,7 @@ export function PartA() {
           faint warm spot from the lit window. By <M>{String.raw`t = 0.5`}</M> the roofline, the trees and the fence are readable.
           At <M>{String.raw`t = 0.75`}</M> everything is there, just grainy.
         </p>
+        <InterpolationPlayground entry={fig('a11-nighthouse-original')} />
       </Section>
 
       {/* ------------------------------------------------------------ 1.2 */}
@@ -199,14 +202,15 @@ export function PartA() {
           step) and an endpoint of exactly <M>{String.raw`1 - t_{\text{start}}`}</M>. All three passed. Starting from the saved{' '}
           <M>{String.raw`t = 0.5`}</M> input takes 25 updates.
         </p>
-        <FigureRow
+        <FrameScrubber
           label="Fig. A8"
-          columns={6}
-          items={['0.50', '0.60', '0.70', '0.80', '0.90', '1.00'].map((t) => ({
+          title="Euler trajectory, h = 0.02"
+          stageWidth="34rem"
+          frames={['0.50', '0.60', '0.70', '0.80', '0.90', '1.00'].map((t) => ({
             entry: fig(`a15-euler-t${t}`),
             label: `t = ${t}`,
           }))}
-          caption="The Euler trajectory from t = 0.50: the initial state, every fifth update, and the final image."
+          caption="The Euler trajectory from t = 0.50: the initial state, every fifth update, and the final image. Press play to watch it settle."
           meta="model output · trajectory.png"
         />
         <FigureRow
@@ -303,10 +307,23 @@ export function PartA() {
           pose, higher contrast, slightly oversaturated skin. Guidance pulls every sample toward the most
           prompt-like answer, which here means a stock headshot.
         </p>
+        <WipeCompare
+          pairs={seeds.map((sd) => ({ key: String(sd), before: fig(`a16-seed${sd}`), after: fig(`a21-seed${sd}`) }))}
+          beforeLabel="no guidance"
+          afterLabel="w = 7"
+          caption="Drag across any seed to compare its unguided sample (left) with the guided one (right). Same starting noise."
+          meta="model output · conditional_*.png vs cfg_*.png"
+        />
       </Section>
 
       {/* ------------------------------------------------------------ 3.1 */}
       <Section id="a-3-1" num="3.1" title="Image-to-Image Editing" motif={<Frog title="Keroppi-style frog doodle" />}>
+        <MarginPlate
+          src="images/decorative/haeckel-frog-detail.webp"
+          w={420}
+          h={437}
+          caption="Haeckel, Batrachia, 1904"
+        />
         <p>
           Editing is the same sampler started late, in the spirit of SDEdit. I noise the input to a starting time
           with fixed noise (seed 180) and integrate to <M>{String.raw`t = 1`}</M> with CFG:
@@ -331,25 +348,25 @@ export function PartA() {
         </p>
         <p>
           One pattern shows up across almost every subject: at <M>{String.raw`t = 0.02`}</M>, the night house, the eye, the orange
-          cat, Keroppi and the Jeanne crop all turned into portraits of a person. That is the same bias from 1.6.
+          cat, Malfoy, Keroppi and the Jeanne crop all turned into portraits of a person. That is the same bias from 1.6.
           With almost no information left, the model falls back on its favorite kind of “high quality photo”.
         </p>
 
         <SubHead>The Campanile and my two photos</SubHead>
-        <EditTimeline section="3.1" group="campanile" title="Campanile" kicker="required · provided image" label="Fig. A12" initial="0.10" />
+        <EditTimeline section="3.1" group="campanile" title="Campanile" kicker="provided image" label="Fig. A12" initial="0.14" />
         <p>
           At 0.02 there is only a smooth white cylinder against a blurry blue background. From 0.04 to 0.06 it is a
           white tapering tower among trees, and at 0.10 and 0.14 a plain obelisk with a single window. The belfry
           arches come back at 0.25, and the clock hands only at 0.50.
         </p>
-        <EditTimeline section="3.1" group="nighthouse" title="Night house" kicker="required · my photo" label="Fig. A13" initial="0.14" />
+        <EditTimeline section="3.1" group="nighthouse" title="Night house" kicker="my photo" label="Fig. A13" initial="0.14" />
         <p>
           My favorite progression. 0.02 is a woman's portrait, 0.04 is a hand holding a card in front of a gray
           wall, and 0.06 is a glowing doorway over a wooden floor. At 0.10 and 0.14 the model has picked up the moon
           and the dark horizon and made a moonlit field with trees and a single glowing light. The house appears at
           0.25 with different siding and windows, and 0.50 is basically my photo.
         </p>
-        <EditTimeline section="3.1" group="eye" title="Eye close-up" kicker="required · my photo" label="Fig. A14" initial="0.06" />
+        <EditTimeline section="3.1" group="eye" title="Eye close-up" kicker="my photo" label="Fig. A14" initial="0.06" />
         <p>
           At 0.02 and 0.04 it is a man's face with blank white eyes and then someone asleep under a cap. By 0.06 it
           is a close-up of an eye again, but a blue one. The green iris and the heavy lashes return gradually from
@@ -357,26 +374,20 @@ export function PartA() {
         </p>
 
         <SubHead>A web image and my drawings</SubHead>
-        <MarginPlate
-          src="images/decorative/haeckel-frog-detail.webp"
-          w={420}
-          h={437}
-          caption="Haeckel, Batrachia, 1904 · public domain · decorative, not a result"
-        />
-        <EditTimeline section="3.1" group="orange-cat" title="Orange cat" kicker="required · image from the web" label="Fig. A15" initial="0.10" />
+        <EditTimeline section="3.1" group="orange-cat" title="Orange cat" kicker="image from the web" label="Fig. A15" initial="0.14" />
         <p>
           The clearest jump of the set. At 0.02 and 0.04 it is a man in a white T-shirt next to the bars, and at
           0.06 a hand gripping one of the bars. At 0.10 the cat is back, but as a smooth, almost cartoon cat with
           huge glassy eyes. Real fur texture only returns from 0.14 on.
         </p>
-        <EditTimeline section="3.1" group="malfoy" title="Malfoy" kicker="required · my drawing" label="Fig. A16" initial="0.14" />
+        <EditTimeline section="3.1" group="malfoy" title="Malfoy" kicker="my drawing" label="Fig. A16" initial="0.10" />
         <p>
-          Low starting times turn my drawing into photos of objects on a white desk: a hand on a black card, a
-          newspaper. At 0.10 it becomes a black and white photo of someone in a dark robe, and at 0.14 a grayscale
-          photo of a blonde person in the drawing's pose. It is a drawing again from 0.25, though that version lost
-          most of the green.
+          This one gave the most convincing “make it real” result I found. 0.02 is a man's portrait printed on a
+          panel, and 0.04 and 0.06 are a hand holding a card and then a phone. At 0.10 and 0.14 the drawing becomes
+          a photo of a blonde woman in a black sweater with her chin on her hand, and the house crest turns into a
+          potted plant. At 0.25 it is a drawing again and the crest is back.
         </p>
-        <EditTimeline section="3.1" group="keroppi" title="Keroppi" kicker="required · my drawing" label="Fig. A17" initial="0.14" />
+        <EditTimeline section="3.1" group="keroppi" title="Keroppi" kicker="my drawing" label="Fig. A17" initial="0.14" />
         <p>
           Keroppi had the strangest path. 0.02 is a man's face, and 0.04 and 0.06 are a gray panel with a white cup
           in the corner and fake lettering. At 0.10 and 0.14 the model finds the frog's layout and makes a product
@@ -388,26 +399,20 @@ export function PartA() {
         <p>
           The preprocessing center-crops to a square, which cut off the top of my Jeanne drawing, so I ran the
           drawing twice: once with the default crop and once padded to a square with a light pink border using{' '}
-          <code>ImageOps.pad</code>. I also tried a tighter crop of the Malfoy drawing.
+          <code>ImageOps.pad</code>.
         </p>
-        <EditTimeline section="3.1" group="jeanne" title="Jeanne, center crop" kicker="extra · my drawing" label="Fig. A18" initial="0.14" extra />
+        <EditTimeline section="3.1" group="jeanne" title="Jeanne, center crop" kicker="my drawing" label="Fig. A18" initial="0.14" extra />
         <p>
           0.02 is a portrait, and 0.04 to 0.10 are crumpled paper, fabric and a pencil. At 0.14 the red trim of the
           jacket gets reinterpreted as a face cut out of red paper, with the lips and an eye made from the trim. At
           0.25 it is a pen drawing again with the face and hands redrawn, and 0.50 is faithful.
         </p>
-        <EditTimeline section="3.1" group="jeanne-full" title="Jeanne, padded to a square" kicker="extra · my drawing" label="Fig. A19" initial="0.25" extra />
+        <EditTimeline section="3.1" group="jeanne-full" title="Jeanne, padded to a square" kicker="my drawing" label="Fig. A19" initial="0.25" extra />
         <p>
           With the border, the model read the whole frame as a photo of a printed object: 0.02 and 0.04 are
           portraits printed on things, 0.06 and 0.10 are books with fake lettering. The intermediate times were the
           interesting ones. 0.14 is a pink-tinted photo of an old man looking up, and 0.25 is a sketch of a young
           man with pink hair and the same red accents. Only 0.50 is clearly Jeanne.
-        </p>
-        <EditTimeline section="3.1" group="malfoy-crop" title="Malfoy, tighter crop" kicker="extra · my drawing" label="Fig. A20" initial="0.10" extra />
-        <p>
-          This crop gave the most convincing “make it real” result I found. At 0.10 and 0.14 the drawing becomes a
-          photo of a blonde woman in a black sweater with her chin on her hand, and the house crest turns into a
-          potted plant. At 0.25 it is a drawing again and the crest is back.
         </p>
       </Section>
 
@@ -426,8 +431,8 @@ export function PartA() {
           group="campanile"
           title="Campanile → rocket"
           prompt={fig('a32-campanile-0.02').prompt}
-          label="Fig. A21"
-          initial="0.25"
+          label="Fig. A20"
+          initial="0.10"
         />
         <p>
           0.02 to 0.06 are complete rockets on launch pads with pine trees, which is the prompt with no Campanile
@@ -440,7 +445,7 @@ export function PartA() {
           group="nighthouse"
           title="Night house → haunted mansion"
           prompt={fig('a32-nighthouse-0.02').prompt}
-          label="Fig. A22"
+          label="Fig. A21"
           initial="0.14"
         />
         <p>
@@ -454,8 +459,8 @@ export function PartA() {
           group="eye"
           title="Eye → galaxy iris"
           prompt={fig('a32-eye-0.02').prompt}
-          label="Fig. A23"
-          initial="0.25"
+          label="Fig. A22"
+          initial="0.14"
         />
         <p>
           This prompt held on the longest. Every starting time up to 0.25 has a galaxy in the iris. At low times
@@ -471,6 +476,10 @@ export function PartA() {
 
       {/* ------------------------------------------------------------ 3.3 */}
       <Section id="a-3-3" num="3.3" title="Visual Anagrams" className="section--night" motif={<Cat title="Black cat silhouette" />}>
+        <div className="night-moon" aria-hidden="true">
+          <img src={asset('images/decorative/steinlen-chat-noir-cat.webp')} alt="" width={440} height={440} loading="lazy" />
+          <span>after Steinlen, 1896</span>
+        </div>
         <p>
           A visual anagram is one image that reads as one prompt upright and a different prompt upside down. At
           every Euler step I predict a CFG velocity for the upright image with prompt <M>{String.raw`p_1`}</M>, predict another for
@@ -481,25 +490,25 @@ export function PartA() {
           <M>{String.raw`F`}</M> is a 180° rotation, which flips both spatial axes (<code>torch.flip(x, (-2, -1))</code>), not
           just a vertical mirror. Since <M>{String.raw`F`}</M> is its own inverse, the notebook checks{' '}
           <M>{String.raw`F(F(x)) = x`}</M>. Each anagram starts from pure noise and takes 50 Euler steps, with four model calls per
-          step (two prompts, each conditional and unconditional). I ran six pairs; these are the four I picked.
+          step (two prompts, each conditional and unconditional). These are the four I picked.
         </p>
         <p className="screen-only reading-hint">Use the turn button on each artwork. The pair underneath is the two saved files.</p>
         <div className="anagram-list">
-          <AnagramViewer group="old-man-campfire" index="i" name="Old man ↔ people around a campfire" label="Fig. A24">
+          <AnagramViewer group="old-man-campfire" index="i" name="Old man ↔ people around a campfire" label="Fig. A23">
             <p>
               The provided example. The rotated view is the stronger one: three figures lit from below by a fire,
               and the fire is the old man's glowing forehead. Upright, his face reads but it is busy. Looking at
               his chin I can see small upside-down faces from the campfire scene.
             </p>
           </AnagramViewer>
-          <AnagramViewer group="village-horse" index="ii" name="Snowy mountain village ↔ horse" label="Fig. A25" reverse>
+          <AnagramViewer group="village-horse" index="ii" name="Snowy mountain village ↔ horse" label="Fig. A24" reverse>
             <p>
               Also provided. Upright it is a village under mountains, and the horse's head hides at the bottom,
               upside down, pretending to be part of a roof. Rotated, the horse is surprisingly clean and the village
               turns into fences and a snowy background.
             </p>
           </AnagramViewer>
-          <AnagramViewer group="cat-ocean" index="iii" name="Black cat ↔ ocean waves" label="Fig. A26">
+          <AnagramViewer group="cat-ocean" index="iii" name="Black cat ↔ ocean waves" label="Fig. A25">
             <p>
               My own pair, and it worked much better than I expected. Upright it is a cat's face with gold eyes and
               two big ears, framed by white foam. Turned over, the ears become dark rocks in the surf and the eyes
@@ -511,7 +520,7 @@ export function PartA() {
               as waves crashing.
             </p>
           </AnagramViewer>
-          <AnagramViewer group="volcano-wine" index="iv" name="Erupting volcano ↔ glass of red wine" label="Fig. A27" reverse>
+          <AnagramViewer group="volcano-wine" index="iv" name="Erupting volcano ↔ glass of red wine" label="Fig. A26" reverse>
             <p>
               My other favorite (seed 190, run in its own cell). Both prompts want a dark mass with a glowing line
               through it. Upright, the bowl of the glass is the dark cone of the volcano and the stem is the glowing
@@ -520,29 +529,16 @@ export function PartA() {
             </p>
           </AnagramViewer>
         </div>
-        <SubHead>Two pairs that did not work</SubHead>
-        <FigureRow
-          label="Fig. A28"
-          columns={4}
-          items={[
-            { entry: fig('a33-eye-moon-upright'), label: 'upright: “a giant human eye”' },
-            { entry: fig('a33-eye-moon-rotated'), label: 'rotated: “a moonlit sky…”' },
-            { entry: fig('a33-hourglass-beach-upright'), label: 'upright: “an antique hourglass…”' },
-            { entry: fig('a33-hourglass-beach-rotated'), label: 'rotated: “golden sand and ocean waves…”' },
-          ]}
-          caption="Seeds 183 and 184. Neither changes meaning when turned over."
-          meta="model output · anagram_3.png, anagram_4.png (+ rotated)"
-        />
-        <p>
-          The eye and moonlit sky pair is an eye in both orientations: a round iris is already close to symmetric
-          under rotation, so the eye prompt could satisfy both views. The hourglass and beach pair failed for a
-          similar reason, since an hourglass looks the same upside down. Only the strip of waves moves from the
-          bottom to the top.
-        </p>
       </Section>
 
       {/* ------------------------------------------------------------ 3.4 */}
-      <Section id="a-3-4" num="3.4" title="Hybrid Images" motif={<Butterfly title="Butterfly line drawing" />}>
+      <Section id="a-3-4" num="3.4" title="Hybrid Images" className="section--glass" motif={<Butterfly title="Butterfly line drawing" />}>
+        <MarginPlate
+          src="images/decorative/haeckel-tineida-plate.webp"
+          w={900}
+          h={1271}
+          caption="Haeckel, Tineida, 1904"
+        />
         <p>
           Hybrid images mix the low frequencies of one prompt with the high frequencies of another, like Project 2,
           except the mixing happens inside the sampler on the velocity. Both CFG predictions use the same{' '}
@@ -556,32 +552,26 @@ export function PartA() {
           means the sampler keeps steering the composition toward <M>{String.raw`a`}</M> at every step while letting <M>{String.raw`b`}</M> paint
           the texture. The distant view is the 64 × 64 Lanczos downsample the notebook displays.
         </p>
-        <MarginPlate
-          src="images/decorative/haeckel-tineida-plate.webp"
-          w={900}
-          h={1271}
-          caption="Haeckel, Tineida, 1904 · public domain · decorative, not a result"
-        />
         <p className="screen-only reading-hint">
           Drag “viewing distance” to step back from each image. At the far end the slider swaps in the saved 64 × 64
           file.
         </p>
         <div className="hybrid-list">
-          <HybridViewer group="skull-waterfall" index="i" name="Skull × waterfall" label="Fig. A29">
+          <HybridViewer group="skull-waterfall" index="i" name="Skull × waterfall" label="Fig. A27">
             <p>
               The provided example. Up close it is a lovely ink-wash waterfall inside a rounded vignette. From far
               away the skull is faint. The rounded vignette gives a cranium shape and the dark cliff and falls sit
               roughly where the eye sockets and nose would be, but I mostly see it because I know to look.
             </p>
           </HybridViewer>
-          <HybridViewer group="cat-forest" index="ii" name="Cat × forest" label="Fig. A30">
+          <HybridViewer group="cat-forest" index="ii" name="Cat × forest" label="Fig. A28">
             <p>
               Also provided. Up close it is clearly a forest drawn on old paper. From far away the two pale tree
               crowns at the top become ears and the trunks fill in a face. Subtle, but it reads better than the
               skull.
             </p>
           </HybridViewer>
-          <HybridViewer group="hourglass-beach" index="iii" name="Hourglass × ocean waves and sand" label="Fig. A31">
+          <HybridViewer group="hourglass-beach" index="iii" name="Hourglass × ocean waves and sand" label="Fig. A29">
             <p>
               My own pair. Up close it is a column of breaking waves between two dark posts, with sand dunes at
               the bottom. From far away the waves disappear and what remains is the frame of an hourglass: dark
@@ -589,7 +579,7 @@ export function PartA() {
               like that the sand from both prompts became the same dunes.
             </p>
           </HybridViewer>
-          <HybridViewer group="butterfly-glass" index="iv" name="Butterfly × stained glass" label="Fig. A32">
+          <HybridViewer group="butterfly-glass" index="iv" name="Butterfly × stained glass" label="Fig. A30">
             <p>
               The one that worked best. Up close it is three Gothic windows with colored glass and lead lines. From
               far away the two large windows become wings and the small middle window becomes the body. It is
@@ -603,13 +593,13 @@ export function PartA() {
           <span className="clockwork__glass">
             <Lancet />
           </span>
-          <HybridViewer group="face-clockwork" index="v" name="Face × clockwork, first run" label="Fig. A33" compact>
+          <HybridViewer group="face-clockwork" index="v" name="Face × clockwork, first run" label="Fig. A31" compact>
             <p>
               From far away it is clearly a face. Up close it is still clearly a face. The gears are there, around
               the edge of the head and stacked at the neck, but they frame the face instead of covering it.
             </p>
           </HybridViewer>
-          <HybridViewer group="face-clockwork-revised" index="vi" name="Face × clockwork, revised prompts" label="Fig. A34" compact>
+          <HybridViewer group="face-clockwork-revised" index="vi" name="Face × clockwork, revised prompts" label="Fig. A32" compact>
             <p>
               The revised run replaced both prompts. Up close it is now nothing but gears. From far away I still
               cannot find a face.

@@ -2,12 +2,15 @@ import { useEffect } from 'react'
 import { LightboxProvider } from './components/Lightbox'
 import { Contents } from './components/Contents'
 import { loadAllImages } from './components/PrintButton'
+import { useReveal } from './components/motion'
+import { asset } from './data/figures'
 import { ChapterOpener, Hero, Introduction, PrintHeader } from './content/Front'
 import { PartA } from './content/PartA'
 import { PartB } from './content/PartB'
 import { Observations, References } from './content/Back'
 
 export default function App() {
+  useReveal()
   useEffect(() => {
     // Lazy images keep the first load light; once the page is idle (or the moment someone
     // prints) every figure is loaded so the PDF is never missing one.
@@ -51,6 +54,20 @@ export default function App() {
             variant="falls"
             title="Learning the Current"
             official="Part B: Flow Matching from Scratch"
+            plate={
+              <figure className="opener__print">
+                <img
+                  src={asset('images/decorative/hokusai-kirifuri-falls.webp')}
+                  alt="Hokusai's woodblock print of Kirifuri Waterfall, with pilgrims at its foot"
+                  width={560}
+                  height={793}
+                  loading="lazy"
+                />
+                <figcaption>
+                  Hokusai, <em>Kirifuri Waterfall at Kurokami Mountain</em>, c. 1832
+                </figcaption>
+              </figure>
+            }
           >
             <p>
               Now the velocity field has to be learned. A UNet on MNIST goes from a one-step denoiser, which can only

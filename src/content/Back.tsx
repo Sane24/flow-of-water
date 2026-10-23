@@ -29,8 +29,8 @@ export function Observations() {
           <h3>Edits survive when the structure fits</h3>
           <p>
             The galaxy prompt held on to a higher starting time than the mansion prompt, and the volcano and wine
-            anagram worked because both prompts wanted a dark mass with a bright line through it. The illusions that
-            failed (eye and moon, hourglass and beach) had one prompt that already looked the same rotated.
+            anagram worked because both prompts wanted a dark mass with a bright line through it. When two prompts
+            can share a silhouette, the sampler does not have to pick one.
           </p>
         </article>
         <article className="obs">
@@ -110,7 +110,7 @@ export function References() {
           </ul>
         </div>
         <div>
-          <h3>Decorative images</h3>
+          <h3>Prints and engravings</h3>
           <ul className="ref-list ref-list--credits">
             <li>
               <img src={asset('images/decorative/haeckel-frog-detail.webp')} alt="" width={420} height={437} loading="lazy" />
@@ -128,10 +128,39 @@ export function References() {
               </span>
             </li>
             <li>
-              <img src={asset('images/decorative/hokusai-great-wave-ink.webp')} alt="" width={1200} height={807} loading="lazy" />
+              <img src={asset('images/decorative/haeckel-muscinae-moss.webp')} alt="" width={560} height={669} loading="lazy" />
+              <span>
+                Ernst Haeckel, <em>Kunstformen der Natur</em> (1904), plate 72, Muscinae. Public domain, via{' '}
+                <a href="https://commons.wikimedia.org/wiki/File:Haeckel_Muscinae.jpg">Wikimedia Commons</a>.
+              </span>
+            </li>
+            <li>
+              <img src={asset('images/decorative/hokusai-great-wave-ink.webp')} alt="" width={1000} height={672} loading="lazy" />
               <span>
                 Katsushika Hokusai, <em>The Great Wave off Kanagawa</em> (c. 1831). Public domain, via{' '}
                 <a href="https://commons.wikimedia.org/wiki/File:Tsunami_by_hokusai_19th_century.jpg">Wikimedia Commons</a>.
+              </span>
+            </li>
+            <li>
+              <img src={asset('images/decorative/hokusai-kirifuri-falls.webp')} alt="" width={560} height={793} loading="lazy" />
+              <span>
+                Katsushika Hokusai, <em>Kirifuri Waterfall at Kurokami Mountain</em> (c. 1832). CC0, The Metropolitan
+                Museum of Art, via{' '}
+                <a href="https://commons.wikimedia.org/wiki/File:Kirifuri_Waterfall_at_Kurokami_Mountain_in_Shimotsuke_MET_DP141256.jpg">
+                  Wikimedia Commons
+                </a>
+                .
+              </span>
+            </li>
+            <li>
+              <img src={asset('images/decorative/steinlen-chat-noir-cat.webp')} alt="" width={440} height={440} loading="lazy" />
+              <span>
+                Théophile-Alexandre Steinlen, <em>Tournée du Chat Noir</em> (1896), detail of the cat with the lettering
+                removed. Public domain, via{' '}
+                <a href="https://commons.wikimedia.org/wiki/File:Th%C3%A9ophile-Alexandre_Steinlen_-_Tourn%C3%A9e_du_Chat_Noir_de_Rodolphe_Salis_(Tour_of_Rodolphe_Salis%27_Chat_Noir)_-_Google_Art_Project.jpg">
+                  Wikimedia Commons
+                </a>
+                .
               </span>
             </li>
           </ul>
