@@ -51,6 +51,15 @@ interface Column {
   left: number
 }
 
+/** True when a drawn butterfly (the hero's, or the one beside §3.4) is on screen. */
+function residentButterflyVisible() {
+  const vh = window.innerHeight
+  return Array.from(document.querySelectorAll('.hero__butterfly, .section__motif .motif--butterfly')).some((el) => {
+    const r = el.getBoundingClientRect()
+    return r.bottom > 0 && r.top < vh
+  })
+}
+
 function readColumn(): Column {
   const report = document.querySelector('.report')
   const r = report?.getBoundingClientRect()
@@ -87,6 +96,7 @@ export function AmbientField() {
     let h = 0
     let col = readColumn()
     let theme: Theme = 'current'
+    let resident = false
     const look = { ...LOOKS.current, rgb: [...LOOKS.current.rgb] as [number, number, number] }
     const parts: Particle[] = []
     let lastScroll = window.scrollY
@@ -149,6 +159,7 @@ export function AmbientField() {
       if (frame % 8 === 0) {
         theme = readTheme()
         col = readColumn()
+        resident = residentButterflyVisible()
       }
       frame++
       const target = LOOKS[theme]
@@ -228,16 +239,20 @@ export function AmbientField() {
       ctx.globalAlpha = 1
     }
 
-    /* butterflies ------------------------------------------------------------ */
+    /* butterflies: one in the air at a time, never alongside a drawn one ------ */
     const flyers = Array.from(fly.children) as HTMLElement[]
-    const flight = flyers.map(() => ({ on: false, x: 0, y: 0, a: -Math.PI / 2, t: 0, side: 1, next: 4 + Math.random() * 8 }))
+    const flight = flyers.map(() => ({ on: false, x: 0, y: 0, a: -Math.PI / 2, t: 0, side: 1 }))
+    let nextSpawn = 5 + Math.random() * 6
 
     const moveFlyers = (time: number, dt: number) => {
       const light = theme === 'current' || theme === 'forest' || theme === 'glass'
+      const anyOn = flight.some((f) => f.on)
+      // pick which butterfly takes the next flight, alternating colors
+      const pick = Math.floor(nextSpawn * 7) % flyers.length
       flight.forEach((f, i) => {
         const el = flyers[i]
         if (!f.on) {
-          if (light && w >= 1100 && time > f.next) {
+          if (!anyOn && i === pick && light && !resident && w >= 1100 && time > nextSpawn) {
             f.on = true
             f.side = Math.random() < 0.5 ? -1 : 1
             const inner = col.half + 60
@@ -262,11 +277,11 @@ export function AmbientField() {
         const speed = 62 + 20 * Math.sin(time * 3 + i)
         f.x += Math.cos(f.a) * speed * dt
         f.y += Math.sin(f.a) * speed * dt + Math.sin(time * 7 + i) * 0.6
-        if (f.y < -60 || !light) {
+        if (f.y < -60 || !light || resident) {
           f.on = false
-          f.next = time + 10 + Math.random() * 14
+          nextSpawn = time + 9 + Math.random() * 12
         }
-        el.style.opacity = light ? '1' : '0'
+        el.style.opacity = light && !resident ? '1' : '0'
         el.style.transform = `translate(${f.x - 18}px, ${f.y - 14}px) rotate(${(f.a + Math.PI / 2) * (180 / Math.PI)}deg)`
       })
     }
