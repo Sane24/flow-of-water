@@ -179,7 +179,7 @@ def part_a_core():
             prompt="a high quality photo", title=f"seed {seed}",
             alt=f"Sample generated from pure noise (seed {seed}) with the prompt 'a high quality photo', no guidance")
         d = save(Image.open(A / f"cfg_{i}.png"), OUT / "part-a/sampling" / f"cfg-seed{seed}.webp")
-        add(f"a21-seed{seed}", d, f"{RUN}/cfg_{i}.png", section="2.1", seed=seed, w=7,
+        add(f"a21-seed{seed}", d, f"{RUN}/cfg_{i}.png", section="2.1", seed=seed, cfg=7,
             prompt="a high quality photo", title=f"seed {seed}, w = 7",
             alt=f"Classifier-free guidance sample (w = 7, seed {seed}) with the prompt 'a high quality photo'")
     full_copy("conditional_samples")
@@ -222,7 +222,7 @@ def part_a_edits():
             t = None if label == "original" else float(label)
             add(f"a31-{slug}-{label}", d, f"{RUN}/{fig}.png", kind="input" if t is None else "result",
                 section="3.1", t=t, full=full, group=slug, groupTitle=name, inputSource=source,
-                prompt="a high quality photo", w=7,
+                prompt="a high quality photo", cfg=7,
                 title="Input" if t is None else f"t = {label}",
                 alt=f"Preprocessed input: {desc}" if t is None else
                 f"Edit of {desc} starting from t = {label} with the prompt 'a high quality photo'")
@@ -234,7 +234,7 @@ def part_a_edits():
             d = save(crop(im, box), OUT / "part-a/text-editing" / slug / f"{'original' if label == 'original' else 't' + label}.webp")
             t = None if label == "original" else float(label)
             add(f"a32-{slug}-{label}", d, f"{RUN}/{fig}.png", kind="input" if t is None else "result",
-                section="3.2", t=t, full=full, group=slug, groupTitle=name, prompt=prompt, w=7,
+                section="3.2", t=t, full=full, group=slug, groupTitle=name, prompt=prompt, cfg=7,
                 title="Input" if t is None else f"t = {label}",
                 alt=f"Input image: {name}" if t is None else f"Text-guided edit of the {name} from t = {label}")
 
@@ -271,7 +271,7 @@ def part_a_illusions():
     for key, slug, seed, pa, pb, featured in ANAGRAMS:
         for suffix, prompt, label in [("", pa, "upright"), ("_rotated", pb, "rotated")]:
             d = save(Image.open(A / f"anagram_{key}{suffix}.png"), OUT / "part-a/anagrams" / f"{slug}-{label}.webp", quality=90)
-            add(f"a33-{slug}-{label}", d, f"{RUN}/anagram_{key}{suffix}.png", section="3.3", seed=seed, w=7,
+            add(f"a33-{slug}-{label}", d, f"{RUN}/anagram_{key}{suffix}.png", section="3.3", seed=seed, cfg=7,
                 group=slug, prompt=prompt, promptA=pa, promptB=pb, featured=featured, view=label,
                 title=f"{label.capitalize()}: “{prompt}”",
                 alt=f"Visual anagram, {label}: reads as {prompt}")
@@ -279,13 +279,13 @@ def part_a_illusions():
 
     for key, slug, seed, distant, close in HYBRIDS:
         d = save(Image.open(A / f"hybrid_{key}.png"), OUT / "part-a/hybrids" / f"{slug}-near.webp", quality=92)
-        add(f"a34-{slug}-near", d, f"{RUN}/hybrid_{key}.png", section="3.4", seed=seed, w=7, group=slug,
+        add(f"a34-{slug}-near", d, f"{RUN}/hybrid_{key}.png", section="3.4", seed=seed, cfg=7, group=slug,
             prompt=close, promptFar=distant, promptNear=close, view="near",
             title="Full resolution (512 × 512)", alt=f"Hybrid image at full size; up close it reads as {close}")
         dest = OUT / "part-a/hybrids" / f"{slug}-far64.png"
         dest.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(A / f"hybrid_{key}_distant64.png", dest)
-        add(f"a34-{slug}-far", dest, f"{RUN}/hybrid_{key}_distant64.png", section="3.4", seed=seed, w=7,
+        add(f"a34-{slug}-far", dest, f"{RUN}/hybrid_{key}_distant64.png", section="3.4", seed=seed, cfg=7,
             group=slug, prompt=distant, promptFar=distant, promptNear=close, view="far",
             title="Distant view (64 × 64)", alt=f"The same hybrid downsampled to 64 by 64; from afar it should read as {distant}")
 
