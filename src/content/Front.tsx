@@ -10,7 +10,7 @@ import { FlowDigits } from '../components/Scenes'
 
 export function Hero() {
   const plate = fig('hero-cat-ocean')
-  const [turned, setTurned] = useState(false)
+  const [turned, setTurned] = useState(true)
   useHeroParallax('top')
   return (
     <header className="hero" id="top" data-ambient="night">
@@ -80,7 +80,7 @@ export function Hero() {
           <Butterfly className="hero__butterfly" />
           <Fern className="hero__fern" />
           <figcaption>
-            <span className="hero__plate-label">fig. 0</span> my black cat ↔ ocean waves anagram (§3.3, seed 182).{' '}
+            <span className="hero__plate-label">fig. 0</span> cat ↔ ocean waves anagram (§3.3, seed 182).{' '}
             <span className="screen-only">Tap it to turn it over.</span>
           </figcaption>
         </figure>

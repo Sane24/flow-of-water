@@ -610,11 +610,15 @@ export function PartA() {
           </HybridViewer>
         </div>
 
-        <SubHead>Human face × clockwork, twice</SubHead>
-        <div className="clockwork">
-          <span className="clockwork__glass">
+        <SubHead className="subhead--glass">
+          <span>Human face</span>
+          <span className="subhead__glass">
             <Lancet />
+            <span className="subhead__x">×</span>
           </span>
+          <span>clockwork</span>
+        </SubHead>
+        <div className="clockwork">
           <HybridViewer group="face-clockwork" index="v" name="Face × clockwork, first run" label="Fig. A31" compact>
             <p>
               From far away it is clearly a face. Up close it is still clearly a face. The gears are there, around

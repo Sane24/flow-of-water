@@ -1089,12 +1089,36 @@ img[data-pixelated] {
   margin: 1rem 0 1.5rem;
 }
 
-.clockwork__glass {
+/* the heading wraps around a small lancet window, with the × sitting in its roundel */
+.subhead--glass {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.55rem;
+  white-space: nowrap;
+}
+
+.subhead__glass {
+  position: relative;
+  flex: none;
+  width: 2.9rem;
+  margin-top: -0.45rem;
+}
+
+.subhead__glass .motif--lancet {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.subhead__x {
   position: absolute;
-  left: 50%;
-  top: -4.4rem;
-  width: 2.6rem;
-  transform: translateX(-50%);
+  left: 0;
+  right: 0;
+  top: 54.8%;
+  transform: translateY(-50%);
+  text-align: center;
+  line-height: 1;
 }
 
 .hybrid--compact {

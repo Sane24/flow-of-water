@@ -62,9 +62,9 @@ export function Section({ id, num, title, children, motif, className = '', ambie
   )
 }
 
-export function SubHead({ id, num, children }: { id?: string; num?: string; children: ReactNode }) {
+export function SubHead({ id, num, className = '', children }: { id?: string; num?: string; className?: string; children: ReactNode }) {
   return (
-    <h4 className="subhead" id={id} data-toc={id ? '' : undefined}>
+    <h4 className={`subhead ${className}`} id={id} data-toc={id ? '' : undefined}>
       {num && <span className="subhead__num">{num}</span>}
       {children}
     </h4>

@@ -147,9 +147,10 @@ export function Lancet({ className = '' }: { className?: string }) {
       <path className="glass glass--b" d="M30 3c12 6 24 19 24 41H30z" />
       <path className="glass glass--c" d="M6 70h24v32H6z" />
       <path className="glass glass--d" d="M30 44h24v26H30z" />
-      <circle className="glass glass--e" cx="30" cy="34" r="9" />
-      <path className="lead" d="M6 102V44C6 22 18 9 30 3c12 6 24 19 24 41v58zM30 3v99M6 44h48M6 70h48M21 34h18" />
-      <circle className="lead" cx="30" cy="34" r="9" />
+      {/* an open roundel in the middle band, kept clear for a letter to sit in */}
+      <circle className="glass glass--e" cx="30" cy="57" r="13" />
+      <path className="lead" d="M6 102V44C6 22 18 9 30 3c12 6 24 19 24 41v58zM30 3v41M30 70v32M6 44h48M6 70h48" />
+      <circle className="lead" cx="30" cy="57" r="13" />
     </svg>
   )
 }

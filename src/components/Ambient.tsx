@@ -22,7 +22,7 @@ interface Look {
 const LOOKS: Record<Theme, Look> = {
   current: { rgb: [42, 103, 112], trail: 1, dot: 0, pixel: 0, alpha: 0.5 },
   forest: { rgb: [85, 112, 79], trail: 1, dot: 0.25, pixel: 0, alpha: 0.5 },
-  glass: { rgb: [199, 118, 96], trail: 0.25, dot: 1, pixel: 0, alpha: 0.7 },
+  glass: { rgb: [199, 118, 96], trail: 0, dot: 0, pixel: 0, alpha: 0 },
   lab: { rgb: [36, 49, 56], trail: 0.35, dot: 0, pixel: 1, alpha: 0.45 },
   night: { rgb: [42, 103, 112], trail: 0, dot: 0, pixel: 0, alpha: 0 },
 }

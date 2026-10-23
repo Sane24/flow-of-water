@@ -1,0 +1,9 @@
+.DS_Store
+__pycache__/
+*.pt
+*.pth
+*.ckpt
+*.zip
+.kaggle/
+.cache/
+data/
