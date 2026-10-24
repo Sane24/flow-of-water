@@ -42,7 +42,7 @@ const l = (b: Block) => [b.x, b.y + b.h / 2] as const
 const bottom = (b: Block) => [b.x + b.w / 2, b.y + b.h] as const
 const top = (b: Block) => [b.x + b.w / 2, b.y] as const
 
-export function UNetDiagram({ conditioned = false }: { conditioned?: boolean }) {
+export function UNetDiagram() {
   const flows: Array<[readonly [number, number], readonly [number, number]]> = [
     [r(B.input), l(B.convIn)],
     [bottom(B.convIn), top(B.down1)],
@@ -90,12 +90,6 @@ export function UNetDiagram({ conditioned = false }: { conditioned?: boolean }) 
       {Object.values(B).map((b) => (
         <Box key={b.label + b.x} b={b} />
       ))}
-      {conditioned && (
-        <g className="unet__cond">
-          <text x={478} y={322}>× t1, or c1 · x + t1</text>
-          <text x={538} y={238}>× t2, or c2 · x + t2</text>
-        </g>
-      )}
       <text className="unet__legend" x="10" y="350">
         D = 128 for the denoiser (7,891,073 parameters) · D = 64 for flow matching
       </text>

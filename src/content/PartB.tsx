@@ -244,19 +244,6 @@ export function PartB() {
           Both are broadcast over height and width, so time acts as a per-channel gain on the decoder features. With{' '}
           <M>{String.raw`D = 64`}</M> the model has 1,996,417 parameters.
         </p>
-        <figure className="fig fig--wide diagram">
-          <div className="diagram__frame">
-            <UNetDiagram conditioned />
-          </div>
-          <figcaption className="caption">
-            <span className="caption__label">Fig. B8</span>
-            <span className="caption__text">
-              Where conditioning enters: the Unflatten output and the first UpBlock output are modulated by the
-              time (and later class) embeddings.
-            </span>
-            <span className="caption__meta">original diagram drawn for this page, after the course's Figure 4</span>
-          </figcaption>
-        </figure>
       </Section>
 
       {/* ------------------------------------------------------------ B 2.2 */}
@@ -278,7 +265,7 @@ export function PartB() {
         <Figure
           entry={fig('b-time-fm-loss')}
           size="wide"
-          label="Fig. B9"
+          label="Fig. B8"
           caption="Training loss for the time-conditioned UNet over the whole run."
         />
         <LossTable
@@ -304,7 +291,7 @@ export function PartB() {
         </p>
         <Eq>{String.raw`t_i = \tfrac{i}{50}, \qquad x \leftarrow x + \tfrac{1}{50}\,u_\theta(x, t_i)`}</Eq>
         <FrameScrubber
-          label="Fig. B10"
+          label="Fig. B9"
           mode="tabs"
           interval={1300}
           frames={[
@@ -318,7 +305,7 @@ export function PartB() {
         <Figure
           entry={fig('b-time-fm-epochs-1-5-10')}
           size="wide"
-          label="Fig. B11"
+          label="Fig. B10"
           caption="The same three checkpoints reloaded and sampled from the same noise, one row per epoch."
         />
         <p>
@@ -367,7 +354,7 @@ export function PartB() {
         <Figure
           entry={fig('b-class-fm-loss-scheduled')}
           size="wide"
-          label="Fig. B12"
+          label="Fig. B11"
           caption="Training loss for the class-conditioned UNet (exponential learning rate schedule)."
           extra="recovered from the saved notebook output"
         />
@@ -391,7 +378,7 @@ export function PartB() {
           with 300 Euler steps, <M>{String.raw`\gamma = 5`}</M>, and the same seed, 180.
         </p>
         <FrameScrubber
-          label="Fig. B13"
+          label="Fig. B12"
           mode="tabs"
           interval={1300}
           frames={[
@@ -418,13 +405,13 @@ export function PartB() {
         <Figure
           entry={fig('b-scheduler-loss-comparison')}
           size="wide"
-          label="Fig. B14"
+          label="Fig. B13"
           caption="Average training loss per epoch for the two runs (the x-axis is 0-indexed)."
         />
         <Figure
           entry={fig('b-class-fm-loss-constant')}
           size="wide"
-          label="Fig. B15"
+          label="Fig. B14"
           caption="Full training loss for the constant learning rate run."
           extra="recovered from the saved notebook output"
         />
@@ -441,7 +428,7 @@ export function PartB() {
           and the scheduled run finishes slightly ahead (0.0847 vs 0.0863).
         </p>
         <FigureRow
-          label="Fig. B16"
+          label="Fig. B15"
           columns={2}
           size="wide"
           items={[
@@ -454,7 +441,7 @@ export function PartB() {
         <Figure
           entry={fig('b-scheduler-visual-comparison')}
           size="text"
-          label="Fig. B17"
+          label="Fig. B16"
           caption="The notebook's stacked comparison: scheduled run in the top four rows, constant learning rate in the bottom four."
         />
         <p>

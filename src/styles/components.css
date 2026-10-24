@@ -539,11 +539,6 @@ img[data-pixelated] {
   fill: var(--ink);
 }
 
-.unet__cond text {
-  font-size: 10px;
-  fill: var(--coral-2);
-}
-
 .unet__legend {
   font-size: 9.5px;
   fill: var(--charcoal-3);
